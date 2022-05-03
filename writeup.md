@@ -557,7 +557,7 @@ passwd: all authentication tokens updated successfully
 [root@kioptrix tmp]#
 ~~~~
 **这里需要注意的是:**
-# 有可能目标服务器无法访问： `https://dl.packetstormsecurity.net/0304-exploits/ptrace-kmod.c`，解决办法是自己修改payload，并搭建中转站。
+# 有可能目标服务器无法访问： 'https://dl.packetstormsecurity.net/0304-exploits/ptrace-kmod.c'，解决办法是自己修改payload，并搭建中转站。
 ~~~shell
 ┌──(root㉿kali)-[/mytest/kioptrix11-22]
 └─# cat /usr/share/exploitdb/exploits/unix/remote/47080.c | grep wget
