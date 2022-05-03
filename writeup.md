@@ -58,13 +58,13 @@ Nmap done: 1 IP address (1 host up) scanned in 30.04 seconds
 ~~~
 
 2. 初步浏览了一下页面，发现如下问题：
-<img src="../../../../images/1.png" />
-<img src="../../../../images/2.png" />
+<img src="../mywriteup/images/1.png" />
+<img src="../mywriteup/images/2.png" />
 去掉路径的具体文件名，只保留目录，发现存在目录遍历漏洞
-<img src="../../../../images/3.png" />
+<img src="../mywriteup/images/3.png" />
 应该是开放了两个模块，mod_perl和mod_ssl
 
-3. 有web应用，所以使用dirb、dirsearch、gobuster扫描一下目录信息
+1. 有web应用，所以使用dirb、dirsearch、gobuster扫描一下目录信息
 ~~~shell
 ┌──(root㉿kali)-[/mytest/kioptrix11-22]
 └─# dirb http://192.168.1.104 /usr/share/dirb/wordlists/common.txt -x /usr/share/dirb/wordlists/extensions_common.txt -o dirb.txt
@@ -575,6 +575,6 @@ passwd: all authentication tokens updated successfully
 └─# ssh root@192.168.1.104
 Unable to negotiate with 192.168.1.104 port 22: no matching key exchange method found. Their offer: diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1
 ~~~
-<img src="../../../../images/4.png" />
+<img src="../mywriteup/images/4.png" />
 **我相信还有别的思路**
 # 4. 说明
