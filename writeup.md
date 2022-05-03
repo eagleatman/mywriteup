@@ -58,7 +58,7 @@ Nmap done: 1 IP address (1 host up) scanned in 30.04 seconds
 ~~~
 
 2. 初步浏览了一下页面，发现如下问题：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png" align="left" style="zoom:40%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png" align="left" style="zoom:60%" />
 
 ![第2张图片](https://github.com/eagleatman/mywriteup/blob/main/images/2.png)
 去掉路径的具体文件名，只保留目录，发现存在目录遍历漏洞
