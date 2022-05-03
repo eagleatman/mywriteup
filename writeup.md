@@ -58,10 +58,10 @@ Nmap done: 1 IP address (1 host up) scanned in 30.04 seconds
 ~~~
 
 2. 初步浏览了一下页面，发现如下问题：
-<img src="../mywriteup/images/1.png" />
-<img src="../mywriteup/images/2.png" />
+![第1张图片](https://github.com/eagleatman/mywriteup/blob/main/images/1.png)
+![第2张图片](https://github.com/eagleatman/mywriteup/blob/main/images/2.png)
 去掉路径的具体文件名，只保留目录，发现存在目录遍历漏洞
-<img src="../mywriteup/images/3.png" />
+![第3张图片](https://github.com/eagleatman/mywriteup/blob/main/images/3.png)
 应该是开放了两个模块，mod_perl和mod_ssl
 
 1. 有web应用，所以使用dirb、dirsearch、gobuster扫描一下目录信息
@@ -575,6 +575,6 @@ passwd: all authentication tokens updated successfully
 └─# ssh root@192.168.1.104
 Unable to negotiate with 192.168.1.104 port 22: no matching key exchange method found. Their offer: diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1
 ~~~
-<img src="../mywriteup/images/4.png" />
+![第4张图片](https://github.com/eagleatman/mywriteup/blob/main/images/4.png)
 **我相信还有别的思路**
 # 4. 说明
