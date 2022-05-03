@@ -58,7 +58,11 @@ Nmap done: 1 IP address (1 host up) scanned in 30.04 seconds
 ~~~
 
 2. 初步浏览了一下页面，发现如下问题：
+<<<<<<< HEAD
 <img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png"  width="56%" />
+=======
+<img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png" align="left" width="56%" />
+>>>>>>> 0d9f3c7b03e594586a50dff5b866f01a61abb17a
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/images/2.png"  width="56%;" />
 
@@ -67,7 +71,7 @@ Nmap done: 1 IP address (1 host up) scanned in 30.04 seconds
 
 应该是开放了两个模块，mod_perl和mod_ssl
 
-1. 有web应用，所以使用dirb、dirsearch、gobuster扫描一下目录信息
+3. 有web应用，所以使用dirb、dirsearch、gobuster扫描一下目录信息
 ~~~shell
 ┌──(root㉿kali)-[/mytest/kioptrix11-22]
 └─# dirb http://192.168.1.104 /usr/share/dirb/wordlists/common.txt -x /usr/share/dirb/wordlists/extensions_common.txt -o dirb.txt
