@@ -59,7 +59,7 @@ Nmap done: 1 IP address (1 host up) scanned in 30.04 seconds
 
 2. 初步浏览了一下页面，发现如下问题：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png"  width="56%" />
-<img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png" align="left" width="56%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png" width="56%" />
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/images/2.png"  width="56%;" />
 
