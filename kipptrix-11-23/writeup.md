@@ -136,7 +136,7 @@ OS and Service detection performed. Please report any incorrect results at https
 </body>
 </html>
 ~~~
-
+# 2. 过程
 `通过分析源代码，发现用户名大概率是administrator,但是没有密码信息，尝试万能密码：`
 
 > `payload: `
@@ -183,3 +183,46 @@ passwd: all authentication tokens updated successfully.
 ~~~
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/6.png" style="zoom:50%" />
+
+# 3. 遗留问题
+**提权脚本那么多，除了一条一条的尝试之外，有没有更快捷的办法？**
+~~~shell
+┌──(root㉿kali)-[/mytest/kioptrix11-23]
+└─# searchsploit kernel 2.6.x Local Privilege Escalation --exclude="Android|Ubuntu|macOS|Sony|windows|solaris"
+--------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                                     |  Path
+--------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Linux Kernel 2.4.x/2.6.x - 'Bluez' BlueTooth Signed Buffer Index Privilege Escalation (2)                                                          | linux/local/926.c
+Linux Kernel 2.4.x/2.6.x - 'uselib()' Local Privilege Escalation (3)                                                                               | linux/local/895.c
+Linux Kernel 2.4.x/2.6.x - BlueTooth Signed Buffer Index Privilege Escalation (1)                                                                  | linux/local/25288.c
+Linux Kernel 2.6 < 2.6.19 (White Box 4 / CentOS 4.4/4.5 / Fedora Core 4/5/6 x86) - 'ip_append_data()' Ring0 Privilege Escalation (1)               | linux_x86/local/9542.c
+Linux Kernel 2.6.x (Gentoo 2.6.29rc1) - 'ptrace_attach' Local Privilege Escalation                                                                 | linux/local/8673.c
+Linux Kernel 2.6.x - 'pipe.c' Local Privilege Escalation (2)                                                                                       | linux/local/33322.c
+Linux Kernel 2.6.x - 'SYS_EPoll_Wait' Local Integer Overflow / Local Privilege Escalation (1)                                                      | linux/local/25202.c
+Linux Kernel 2.6.x - Ext4 'move extents' ioctl Privilege Escalation                                                                                | linux/local/33395.txt
+Linux Kernel 2.6.x - Ptrace Privilege Escalation                                                                                                   | linux/local/30604.c
+Linux Kernel 2.6.x / 3.10.x / 4.14.x (RedHat / Debian / CentOS) (x64) - 'Mutagen Astronomy' Local Privilege Escalation                             | linux_x86-64/local/45516.c
+Linux Kernel 3.14-rc1 < 3.15-rc4 (x64) - Raw Mode PTY Echo Race Condition Privilege Escalation                                                     | linux_x86-64/local/33516.c
+Linux Kernel 4.8.0 UDEV < 232 - Local Privilege Escalation                                                                                         | linux/local/41886.c
+Linux Kernel < 2.6.11.5 - BlueTooth Stack Privilege Escalation                                                                                     | linux/local/4756.c
+Linux Kernel < 2.6.19 (Debian 4) - 'udp_sendmsg' Local Privilege Escalation (3)                                                                    | linux/local/9575.c
+Linux Kernel < 2.6.19 (x86/x64) - 'udp_sendmsg' Local Privilege Escalation (2)                                                                     | linux/local/9574.txt
+Linux Kernel < 2.6.22 - 'ftruncate()'/'open()' Local Privilege Escalation                                                                          | linux/local/6851.c
+Linux Kernel < 2.6.28 - 'fasync_helper()' Local Privilege Escalation                                                                               | linux/local/33523.c
+Linux Kernel < 2.6.29 - 'exit_notify()' Local Privilege Escalation                                                                                 | linux/local/8369.sh
+Linux Kernel < 2.6.36-rc4-git2 (x86-64) - 'ia32syscall' Emulation Privilege Escalation                                                             | linux_x86-64/local/15023.c
+Linux Kernel < 2.6.37-rc2 - 'ACPI custom_method' Local Privilege Escalation                                                                        | linux/local/15774.c
+Linux Kernel < 2.6.7-rc3 (Slackware 9.1 / Debian 3.0) - 'sys_chown()' Group Ownership Alteration Privilege Escalation                              | linux/local/718.c
+Linux Kernel < 3.16.1 - 'Remount FUSE' Local Privilege Escalation                                                                                  | linux/local/34923.c
+Linux Kernel < 3.16.39 (Debian 8 x64) - 'inotfiy' Local Privilege Escalation                                                                       | linux_x86-64/local/44302.c
+Linux Kernel < 3.8.9 (x86-64) - 'perf_swevent_init' Local Privilege Escalation (2)                                                                 | linux_x86-64/local/26131.c
+Linux Kernel < 3.8.x - open-time Capability 'file_ns_capable()' Local Privilege Escalation                                                         | linux/local/25450.c
+Linux kernel < 4.10.15 - Race Condition Privilege Escalation                                                                                       | linux/local/43345.c
+Linux Kernel < 4.11.8 - 'mq_notify: double sock_put()' Local Privilege Escalation                                                                  | linux/local/45553.c
+--------------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+Papers: No Results
+~~~
+
+
+# 4. 说明
