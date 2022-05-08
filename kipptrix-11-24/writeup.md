@@ -159,7 +159,7 @@ Error opening terminal: xterm-256color.
 
 
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/image-20220508013939288.png" alt="image-20220508013939288" style="zoom:25%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/10.png" width="56%" />
 
 
 
@@ -172,7 +172,7 @@ root@Kioptrix3:~#
 
 ### 2. 思路二 lotusCMS
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/10.png" width="56%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/11.png" width="56%" />
 
 ~~~shell
 msf6 > search lotusCMS
@@ -251,7 +251,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/11.png" width="56%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/12.png" width="56%" />
 
 
 
