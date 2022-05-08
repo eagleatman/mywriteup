@@ -71,17 +71,17 @@ OS and Service detection performed. Please report any incorrect results at https
 
 访问网页，找到一个sql注入点
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/1.png" alt="image-20220508004440592" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/1.png" width="56%" />
 
 
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/2.png" alt="image-20220508004956468" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/2.png" width="56%" />
 
 
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/3.png" alt="image-20220508005525004" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/3.png" width="56%" />
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/4.png" alt="image-20220508005718109" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/4.png" width="56%" />
 
 > 最终拿到几个账号：
 >
@@ -91,11 +91,11 @@ OS and Service detection performed. Please report any incorrect results at https
 >
 > 
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/5.png" alt="image-20220508010216610" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/5.png" width="56%" />
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/6.png" alt="image-20220508011141390" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/6.png" width="56%" />
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/7.png" alt="image-20220508012251340" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/7.png" width="56%" />
 
 
 
@@ -108,7 +108,7 @@ OS and Service detection performed. Please report any incorrect results at https
 > |  1 | dreg       | 0d3eccfb887aabd50f243b3f155c0f85 |    Mast3r
 > |  2 | loneferret | 5badcaf789d3d1d09794d8f021f40f0e |   starwars
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/8.png" alt="image-20220508012251340" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/8.png" width="56%" />
 
 
 
@@ -155,7 +155,7 @@ Error opening terminal: xterm-256color.
 >
 > 然后再:sudo ht
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/9.png" alt="image-20220508013658408" style="zoom:25%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/9.png" width="56%" />
 
 
 
@@ -172,7 +172,7 @@ root@Kioptrix3:~#
 
 ### 2. 思路二 lotusCMS
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/10.png" alt="image-20220508014333575" style="zoom:33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/10.png" width="56%" />
 
 ~~~shell
 msf6 > search lotusCMS
@@ -251,7 +251,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 
 
-<img src="/Users/tiantianzhang/Documents/typora笔记/自我学习笔记/未命名.assets/11.png" alt="image-20220508145721838" style="zoom: 33%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kipptrix-11-24/images/11.png" width="56%" />
 
 
 
