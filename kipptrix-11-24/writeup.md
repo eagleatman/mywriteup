@@ -264,9 +264,22 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 
 ## 1.3. 未解决问题
+> 1. 无用账号信息
+> 1:admin:n0t7t1k4
+> 这个账号是干啥用的，无用线索吗？？
 
-1:admin:n0t7t1k4
-> 这个账号是干啥用的，无用线索吗？？？
+> 2. 提权问题
+> ~~~shell
+> -rw-r--r-- 1 root root 14963 May  7 06:41 14814.c
+> -rw-r--r-- 1 root root  8472 May  7 07:05 15150.c
+> -rw-r--r-- 1 root root  7023 May  7 06:38 15774.c
+> -rw-r--r-- 1 root root  8812 May  7 05:54 15916.c
+> -rw-r--r-- 1 root root 14293 May  7 06:59 17787.c
+> -rw-r--r-- 1 root root 15329 May  7 05:31 33321.c
+> -rw-r--r-- 1 root root  4803 May  7 05:26 40616.c
+> -rw-r--r-- 1 root root  8322 May  7 05:44 41760.txt
+> ~~~
+> 尝试了以上所有提权脚本，都不成功，难道把该版本的所有的内核漏洞都修复了？\_/
 
 
 ## 1.4. 说明
