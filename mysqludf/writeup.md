@@ -1341,7 +1341,7 @@ drwxrwxrwx 3 www-data www-data  4096 Nov  9  2018 ..
 -rw-rw-rw- 1 www-data www-data 10411 Nov  9  2018 flag3.png
 root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# cp flag3.png /var/www/html  # 复制到网站目录
 root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# chmod 777 /var/www/html/flag3.png  # 添加访问权限
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/7.png" width="56%">
+
 root@Raven:/root# cat flag4.txt
 cat flag4.txt
   ___                   ___ ___
@@ -1354,7 +1354,7 @@ I hope you enjoyed this second interation of the Raven VM
 Hit me up on Twitter and let me know what you thought:
 @mccannwj / wjmccann.github.io
 ```
-
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/7.png" width="56%">
 </details>
  
 
