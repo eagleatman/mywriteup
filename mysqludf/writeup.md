@@ -70,10 +70,7 @@ Nmap done: 1 IP address (1 host up) scanned in 14.81 seconds
 </details>
 
 
-<details>
-<summary>2. 访问web页面发现有些图片加载不出来，通过查看源代码发现有些使用的链接地址是 http://raven.local/xxxx.xxx ，因此需要加入将 192.168.0.102	raven.local 加入到 /etc/hosts </summary>
-
-</details>
+> 2. 访问web页面发现有些图片加载不出来，通过查看源代码发现有些使用的链接地址是 http://raven.local/xxxx.xxx ，因此需要加入将 192.168.0.102	raven.local 加入到 /etc/hosts 
 
 <details>
 <summary>3. 使用gobuster扫描目录</summary>
