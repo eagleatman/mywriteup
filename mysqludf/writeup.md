@@ -1361,5 +1361,5 @@ Hit me up on Twitter and let me know what you thought:
 ## 1.2. window
 
 # 2. 遗留
-
+还差一个windows版本的
 # 3. 说明
