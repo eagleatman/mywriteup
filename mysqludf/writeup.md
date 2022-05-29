@@ -114,16 +114,16 @@ http://192.168.0.102/wordpress            (Status: 301) [Size: > 318] [--> http:
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/1.png" width="56%">
 </details>
 
-
-> 4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是`/var/www/html/vendor`
-
+<details>
+<summary>4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是`/var/www/html/vendor`</summary>
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/2.png" width="56%">
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/3.png" width="56%">
 
-> 5. phpmailer  exploit
-<details><summary>kali上利用searchsploit搜索exploit</summary>
+</details>
+
+<details><summary>5. phpmailer  exploit(kali上利用searchsploit搜索exploit)</summary>
 
 ```shell
 ┌──(root㉿kali)-[/kioptrix3]
@@ -312,14 +312,8 @@ if r.status_code == 200:
 </details>
 
 
-
-
-
-
-> 8. mysql提权
-
 <details>
-<summary>上传LinEnum.sh脚本并执行</summary>
+<summary>8. mysql提权(先上传LinEnum.sh脚本并执行)</summary>
 
 ```shell
 www-data@Raven:/tmp$ ./test.sh
