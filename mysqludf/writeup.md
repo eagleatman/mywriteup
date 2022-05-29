@@ -159,7 +159,7 @@ File Type: Python script, Unicode text, UTF-8 text executable
 
 
 <details>
-<summary>官方：https://www.exploit-db.com/exploits/40974的源代码如下：</summary>
+<summary>官方：https://www.exploit-db.com/exploits/40974 的源代码如下：</summary>
 
 ```python
 """
