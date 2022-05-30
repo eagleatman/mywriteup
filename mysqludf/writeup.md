@@ -1431,5 +1431,5 @@ Bye
 </details>
 
 # 2. 遗留
-还差一个windows版本的
+还差MOF提权
 # 3. 说明
