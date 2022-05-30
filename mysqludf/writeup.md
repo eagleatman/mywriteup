@@ -112,7 +112,7 @@ http://192.168.0.102/wordpress            (Status: 301) [Size: > 318] [--> http:
 </details>
 
 <details>
-<summary>4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是`/var/www/html/vendor`</summary>
+<summary>4. 找到网站使用了	PHPMailer而且版本是5.2.16，网站路径是/var/www/html/vendor</summary>
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/2.png" width="56%">
 
@@ -1286,15 +1286,15 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 ```
 
 <img src="https://github.com/eagleatman/mywriteup/blob/main/mysqludf/images/5.png" width="56%">
-
+**其中有一个，mysql的服务是以root权限运行，同时还加载了插件目录**
+~~~shell
+/usr/sbin/mysqld --basedir=/usr --datadir=/var/lib/mysql --plugin-dir=/usr/lib/mysql/plugin --user=root --log-error=/var/log/mysql/error.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock --port=3306
+~~~
 </details>
 
 
 
-**其中有一个，mysql的服务还加载了插件目录**
-~~~shell
-/usr/sbin/mysqld --basedir=/usr --datadir=/var/lib/mysql --plugin-dir=/usr/lib/mysql/plugin --user=root --log-error=/var/log/mysql/error.log --pid-file=/var/run/mysqld/mysqld.pid --socket=/var/run/mysqld/mysqld.sock --port=3306
-~~~
+
 
 <details>
 <summary>9. sql提权过程</summary>
