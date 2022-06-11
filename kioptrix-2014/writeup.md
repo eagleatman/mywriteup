@@ -345,6 +345,7 @@ Array
 )
 * Connection #0 to host 192.168.0.103 left intact
 ```
+<pre><img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-2014/images/1.png" width="56%" /></pre>
 </details>
 
 ## 1.5. 后渗透
