@@ -1053,7 +1053,7 @@ $ ps -p 2931
 </details>
 
 ## 1.5. 后渗透
-<details><summary>1. 提权</summary></details>
+<details><summary>1. 提权</summary>
 
 ```shell
 # 经过两个测试两种提权脚本都是可以成功的，大家可以自己测试一下。
