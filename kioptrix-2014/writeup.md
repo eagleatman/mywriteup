@@ -1,7 +1,7 @@
 
 # 0. 准备
 <details><summary>做这个靶机的收获、感想</summary>
-<pre>
+<pre width="80%">
 [官方渗透测试的执行标准的描述](http://www.pentest-standard.org/index.php/Main_Page)
 > http://www.pentest-standard.org/index.php/Main_Page
 1. Pre-engagement Interactions  前期交互
