@@ -20,7 +20,7 @@
 </code></pre>
 </details>
 
-
+[靶机地址Kioptrix: 2014: ](https://www.vulnhub.com/entry/kioptrix-2014-5,62/)
 # 1. 过程
 
 ## 1.1. 信息收集
