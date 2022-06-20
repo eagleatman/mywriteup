@@ -68,6 +68,40 @@ Disallow: /beer
 <img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/2.png" width="16%" display="block"> <br />
 同时/images/存在目录遍历，可以列出该目录下的所有内容。<br />
 <img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/3.png" width="36%" display="block"> <br />
+nikto 扫描一下web漏洞：
+```shell
+┌──(root㉿kali)-[/fristileaks13]
+└─# cat nikto.txt
+- Nikto v2.1.6/2.1.5
++ Target Host: 192.168.0.101
++ Target Port: 80
++ GET Server may leak inodes via ETags, header found with file /, inode: 12722, size: 703, mtime: Tue Nov 17 13:45:47 2015
++ GET The anti-clickjacking X-Frame-Options header is not present.
++ GET The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ GET The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ GET Entry '/cola/' in robots.txt returned a non-forbidden or redirect HTTP code (200)
++ GET Entry '/sisi/' in robots.txt returned a non-forbidden or redirect HTTP code (200)
++ GET Entry '/beer/' in robots.txt returned a non-forbidden or redirect HTTP code (200)
++ GET "robots.txt" contains 3 entries which should be manually viewed.
++ HEAD Apache/2.2.15 appears to be outdated (current is at least Apache/2.4.37). Apache 2.2.34 is the EOL for the 2.x branch.
++ HEAD PHP/5.3.3 appears to be outdated (current is at least 7.2.12). PHP 5.6.33, 7.0.27, 7.1.13, 7.2.1 may also current release for each branch.
++ OPTIONS Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE
++ OSVDB-877: TRACE HTTP TRACE method is active, suggesting the host is vulnerable to XST
++ OSVDB-3268: GET /icons/: Directory indexing found.
++ OSVDB-3268: GET /images/: Directory indexing found.
++ OSVDB-3233: GET /icons/README: Apache default file found.
+```
+目前为止没有特别的发现，因此对目录进行扫描：
+
+同样没有发现有价值的目录信息，事情进行到这里就只能回归原点进行，首页有个图片，上面写着keep calm and drink fristi，联想到网站的目录都是cola、sisi、beer都是饮料，因此猜测有可能存在fristi目录：<br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/4.png" width="46%" display="block"> <br />
+通过分析这个目录的源码可以发现，可能的用户名有：admin/eezeepz，同时还存在一段怀疑是Base64编码的数据，尝试使用base64解码成图片： <br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/5.png" width="46%" display="block"> <br />
+这个图片上的字符：keKkeKKeKKeKkEkkEk猜测可能是密码，于是尝试登陆，eezeepz/keKkeKKeKKeKkEkkEk组合能够正常登陆，而admin/keKkeKKeKKeKkEkkEk组合无法正常登陆。<br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/6.png" width="46%" display="block"> <br />
+发现一个链接，点进去后是一个长传页面，怀疑存在文件上传漏洞：<br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/7.png" width="65%" display="block"> <br />
+
 # Exploitation
 
 # Post-Exploitation
