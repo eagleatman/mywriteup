@@ -65,9 +65,9 @@ Disallow: /sisi
 Disallow: /beer
 ```
 这些目录,这三个目录都是同一张图片,
-<pre>
+<div>
 <img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/1.png" width="56%" align="left">
-</pre>
+</div>
 同时/images/存在目录遍历，可以列出该目录下的所有内容。
 
 # Exploitation
