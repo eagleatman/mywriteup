@@ -53,7 +53,7 @@ OS and Service detection performed. Please report any incorrect results at https
 可以看到目标机器只开放了80端口，robots.txt中有三个目录/cola /sisi /beer，操作系统版本：OS details: Linux 2.6.32 - 3.10, Linux 2.6.32 - 3.13
 
 # Vulnerability Analysis
-浏览器查看一下主页
+浏览器查看一下主页 <br />
 <img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/1.png" width="56%" display="block">
 浏览器查看一下robots.txt
 ```shell
