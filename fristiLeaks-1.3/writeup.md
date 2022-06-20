@@ -68,8 +68,9 @@ Disallow: /beer
 <p>
 <img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/1.png" width="56%" align="left">
 </p>
+<p>
 同时/images/存在目录遍历，可以列出该目录下的所有内容。
-
+</p>
 # Exploitation
 
 # Post-Exploitation
