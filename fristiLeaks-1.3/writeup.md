@@ -54,7 +54,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 # Vulnerability Analysis
 浏览器查看一下主页
-
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/1.png" width="56%" display="block">
 浏览器查看一下robots.txt
 ```shell
 ┌──(root㉿kali)-[/fristileaks13]
@@ -65,7 +65,7 @@ Disallow: /sisi
 Disallow: /beer
 ```
 这些目录,这三个目录都是同一张图片, <br />
-<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/1.png" width="56%" display="block">
+
 
 同时/images/存在目录遍历，可以列出该目录下的所有内容。
 
