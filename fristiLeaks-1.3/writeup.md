@@ -54,7 +54,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 # Vulnerability Analysis
 浏览器查看一下主页 <br />
-<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/1.png" width="56%" display="block">
+<img src="https://raw.githubusercontent.com/eagleatman/mywriteup/main/fristiLeaks-1.3/images/1.png" width="56%" display="block"> <br />
 浏览器查看一下robots.txt
 ```shell
 ┌──(root㉿kali)-[/fristileaks13]
