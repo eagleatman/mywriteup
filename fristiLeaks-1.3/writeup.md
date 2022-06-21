@@ -870,6 +870,8 @@ id
 uid=0(firefart) gid=0(root) groups=0(root)
 [firefart@localhost tmp]#
 ```
+可以发现通过内核提权也可以直接获取到系统的最高权限，也是最直接、最暴力的方式了，但是有时候也是最耗费时间的方式(需要不停的尝试exp)。
+<font color="red">我前期花费了大量事件在内核提权上，测试了很多脚本，都不能成功，借鉴了大神提醒后才使用脏牛v2版本才提权成功；正因为如此，所以个人在此再次强调一下信息收集的重要性，收集的信息越全，你的路才会更宽、更快。</font>
 # Conclusion
 
 - [ ] 有一个待解决的问题是为什么`echo "/home/admin/chmod 777 /root" > /tmp/runthis` 执行不成功
