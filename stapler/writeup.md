@@ -333,6 +333,7 @@ harry@192.168.0.152: Permission denied (publickey,password).
 访问web页面https://192.168.0.150:12380/blogblog/：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/2.png" width="56%">
 看到wordpress后，使用wpscan跑一下：
+
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# wpscan --url https://192.168.0.150:12380/blogblog/ -e ap,vt,u --plugins-detection mixed -v --disable-tls-checks -o wpscan.txt
