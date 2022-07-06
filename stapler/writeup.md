@@ -5,6 +5,10 @@
 这个靶机也有很多有意思的地方，大家可以自己挖掘，也是目前为止我遇到的靶机中比较丰富的，正是这样的多样性，增强了不少趣味性，在此，衷心感谢辛辛苦苦编译环境的作者(g0tmi1k)，非常感谢你们的辛勤付出。 :thumbsup:  :thumbsup:  :thumbsup:
 
 # Information Gathering
+
+<details>
+<summary>nmap扫描</summary>
+<pre>
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# cat nmap.txt
@@ -328,6 +332,9 @@ harry@192.168.0.152: Permission denied (publickey,password).
 + OSVDB-3233: GET /icons/README: Apache default file found.
 + GET /phpmyadmin/: phpMyAdmin directory found
 ```
+</pre>
+</details>
+
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/1.png" width="56%"></br>
 得到两个用户名：tim、zoe
 访问web页面https://192.168.0.150:12380/blogblog/：
