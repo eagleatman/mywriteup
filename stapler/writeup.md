@@ -153,9 +153,13 @@ HOP RTT     ADDRESS
 OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 # Nmap done at Tue Jun 28 21:49:17 2022 -- 1 IP address (1 host up) scanned in 101.34 seconds
 ```
+</pre>
 </details>
 
 ## FTP
+<details>
+<summary>登录一下FTP，看一下有没有有用的信息</summary>
+
 ```shell
 ┌──(root㉿kali)-[~]
 └─# ftp anonymous@192.168.0.152
@@ -179,7 +183,6 @@ ftp> ls
 226 Directory send OK.
 ftp> help
 Commands may be abbreviated.  Commands are:
-
 !		ftp		msend		restart
 $		gate		newer		rhelp
 account		get		nlist		rmdir
@@ -211,10 +214,6 @@ more       	view a remote file through your pager
 ftp> more note
 Elly, make sure you update the payload information. Leave it in your FTP accoun
 t once your are done, John.
-```
-得到两个用户名：john、elly
-使用elly/john登录一下ftp：
-```shell
 ┌──(root㉿kali)-[~]
 └─# ftp elly@192.168.0.152
 Connected to 192.168.0.152.
@@ -228,7 +227,6 @@ Connected to 192.168.0.152.
 Password:
 530 Login incorrect.
 ftp: Login failed
-
 ┌──(root㉿kali)-[~]
 └─# ftp john@192.168.0.152
 Connected to 192.168.0.152.
@@ -242,7 +240,6 @@ Connected to 192.168.0.152.
 Password:
 530 Login incorrect.
 ftp: Login failed
-
 ┌──(root㉿kali)-[~]
 └─# ftp harry@192.168.0.152
 Connected to 192.168.0.152.
@@ -258,7 +255,8 @@ Password:
 ftp: Login failed
 ftp>
 ```
-等到一个用户名：harry，现在用户名为：john、elly、harry
+</details>
+总之，通过FTP并未找到有用的信息，只得到了一些用户名信息：john、elly、harry；这很让我怀疑，难道要用暴力破解？？？
 
 ## SSH
 ```shell
