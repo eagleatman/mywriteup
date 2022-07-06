@@ -332,7 +332,8 @@ harry@192.168.0.152: Permission denied (publickey,password).
 得到两个用户名：tim、zoe
 访问web页面https://192.168.0.150:12380/blogblog/：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/2.png" width="56%">
-看到wordpress后，使用wpscan跑一下：
+
+看到wordpress后，使用wpscan跑一下：</br>
 
 ```shell
 ┌──(root㉿kali)-[/stapler]
