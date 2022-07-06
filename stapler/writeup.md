@@ -9,6 +9,7 @@
 <details>
 <summary>nmap扫描</summary>
 <pre>
+
 ```shell
 ┌──(root㉿kali)-[/stapler]
 └─# cat nmap.txt
@@ -152,6 +153,8 @@ HOP RTT     ADDRESS
 OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 # Nmap done at Tue Jun 28 21:49:17 2022 -- 1 IP address (1 host up) scanned in 101.34 seconds
 ```
+
+</details>
 
 ## FTP
 ```shell
