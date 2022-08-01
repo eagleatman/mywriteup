@@ -51,7 +51,7 @@ OS and Service detection performed. Please report any incorrect results at https
 
 <p>目录--/jabcd0cs，而且使用了opendocman文档管理系统，这里比较坑的是文档介绍这里，如果不去查看源代码或者Ctrl+a选择一下页面是看不到页面的内容的，因为字体颜色和背景颜色都是黑色的：</p>
 <img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/2.png" width="56%" ></br>
-<<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/3.png" width="56%" ></br>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/3.png" width="56%" ></br>
 
 ### 2.2.1 文件上传，可惜不能执行
 <p>使用guest账号进行登录的时候，发现php文件是可以上传成功的，可惜不能让服务器执行，浏览器下载了文件</p>
