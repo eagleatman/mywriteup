@@ -47,15 +47,15 @@ OS and Service detection performed. Please report any incorrect results at https
 
 ## 2.2 web服务
 通过浏览主页发现目录--/jabc
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/1.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/1.png" width="56%" ></br>
 
 目录--/jabcd0cs，而且使用了opendocman文档管理系统
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/2.png" width="56%" ></br>
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/3.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/2.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/3.png" width="56%" ></br>
 
 ### 2.2.1 文件上传，可惜不能执行
 使用guest账号进行登录的时候，发现php文件是可以上传成功的，可惜不能让服务器执行，浏览器下载了文件
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/4.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/4.png" width="56%" ></br>
 
 ### 2.2.2 网站目录扫描
 分别对/jabc和/jabcd0cs两个目录进行扫描：
@@ -194,7 +194,7 @@ DOWNLOADED: 4612 - FOUND: 4
 ```
 </details>
 虽然有很多目录都是可以直接列出文件的，但是翻了半天没有发现有用的信息，大多数的.inc文件翻了一下发现太久不看代码，有些看不懂 :sob: 唯一看到一个有用的目录/jabc/sites/default/，还不能查看源代码：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/5.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/5.png" width="56%" ></br>
 
 # 3. Vulnerability Analysis
 由于通过目录遍历没有找到有用的信息，尝试通过DMS--opendocman进行突破：
@@ -225,13 +225,13 @@ File Type: Unicode text, UTF-8 text
 <input type="submit" name="login" value="Run">
 </form>
 ```
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/6.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/6.png" width="56%" ></br>
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/7.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/7.png" width="56%" ></br>
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/8.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/8.png" width="56%" ></br>
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/10.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/10.png" width="56%" ></br>
 
 ## 3.2 SQL注入
 我们来尝试一下SQL注入：
@@ -496,7 +496,7 @@ Table: odm_user
 </details>
 拿到hash值之后，一般用在线解密网站去解密，当然也可以hashcat进行撞库(保证你的字典够强才行)，得到两个账号：guest/guest、webmin/webmin1980。
 使用webmin登陆一下网站：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/9.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/9.png" width="56%" ></br>
 但是一样的结果虽然能够上传.php文件，依然是无法让它在服务端执行。
 
 # 4. Exploitation
@@ -1536,7 +1536,7 @@ vulnosadmin@VulnOSv2:~$ file r00t.blend
 r00t.blend: Blender3D, saved as 32-bits little endian with version 2.77
 ```
 使用blender打开这个文件，会发现神奇的事情：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/11.png" width="56%" ></br>
+< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/11.png" width="56%" ></br>
 得到一个字符串：ab12fg//drg
 
 猜测是root密码：
