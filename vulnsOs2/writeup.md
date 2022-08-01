@@ -46,16 +46,16 @@ OS and Service detection performed. Please report any incorrect results at https
 </details>
 
 ## 2.2 web服务
-通过浏览主页发现目录--/jabc
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/1.png" width="56%" ></br>
+<p>通过浏览主页发现目录--/jabc</p>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/1.png" width="56%" ></br>
 
-目录--/jabcd0cs，而且使用了opendocman文档管理系统
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/2.png" width="56%" ></br>
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/3.png" width="56%" ></br>
+<p>目录--/jabcd0cs，而且使用了opendocman文档管理系统</p>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/2.png" width="56%" ></br>
+<<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/3.png" width="56%" ></br>
 
 ### 2.2.1 文件上传，可惜不能执行
-使用guest账号进行登录的时候，发现php文件是可以上传成功的，可惜不能让服务器执行，浏览器下载了文件
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/4.png" width="56%" ></br>
+<p>使用guest账号进行登录的时候，发现php文件是可以上传成功的，可惜不能让服务器执行，浏览器下载了文件</p>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/4.png" width="56%" ></br>
 
 ### 2.2.2 网站目录扫描
 分别对/jabc和/jabcd0cs两个目录进行扫描：
@@ -225,13 +225,13 @@ File Type: Unicode text, UTF-8 text
 <input type="submit" name="login" value="Run">
 </form>
 ```
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/6.png" width="56%" ></br>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/6.png" width="56%" ></br>
 
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/7.png" width="56%" ></br>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/7.png" width="56%" ></br>
 
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/8.png" width="56%" ></br>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/8.png" width="56%" ></br>
 
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/10.png" width="56%" ></br>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/10.png" width="56%" ></br>
 
 ## 3.2 SQL注入
 我们来尝试一下SQL注入：
@@ -494,9 +494,9 @@ Table: odm_user
 [*] ending @ 18:03:21 /2022-07-31/
 ```
 </details>
-拿到hash值之后，一般用在线解密网站去解密，当然也可以hashcat进行撞库(保证你的字典够强才行)，得到两个账号：guest/guest、webmin/webmin1980。
-使用webmin登陆一下网站：
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/9.png" width="56%" ></br>
+<p>拿到hash值之后，一般用在线解密网站去解密，当然也可以hashcat进行撞库(保证你的字典够强才行)，得到两个账号：guest/guest、webmin/webmin1980。
+使用webmin登陆一下网站：</p>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/9.png" width="56%" ></br>
 但是一样的结果虽然能够上传.php文件，依然是无法让它在服务端执行。
 
 # 4. Exploitation
@@ -1535,8 +1535,8 @@ drwx------ 2 vulnosadmin vulnosadmin   4096 Apr  3  2016 .cache
 vulnosadmin@VulnOSv2:~$ file r00t.blend
 r00t.blend: Blender3D, saved as 32-bits little endian with version 2.77
 ```
-使用blender打开这个文件，会发现神奇的事情：
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/11.png" width="56%" ></br>
+<p>使用blender打开这个文件，会发现神奇的事情：</p>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/11.png" width="56%" ></br>
 得到一个字符串：ab12fg//drg
 
 猜测是root密码：
