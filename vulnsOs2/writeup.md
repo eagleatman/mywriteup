@@ -193,8 +193,8 @@ END_TIME: Sun Jul 31 12:09:22 2022
 DOWNLOADED: 4612 - FOUND: 4
 ```
 </details>
-虽然有很多目录都是可以直接列出文件的，但是翻了半天没有发现有用的信息，大多数的.inc文件翻了一下发现太久不看代码，有些看不懂 :sob: 唯一看到一个有用的目录/jabc/sites/default/，还不能查看源代码：
-< /br><img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/5.png" width="56%" ></br>
+<p>虽然有很多目录都是可以直接列出文件的，但是翻了半天没有发现有用的信息，大多数的.inc文件翻了一下发现太久不看代码，有些看不懂 :sob: 唯一看到一个有用的目录/jabc/sites/default/，还不能查看源代码：</p>
+<img src="https://github.com/eagleatman/mywriteup/blob/main/vulnsOs2/images/5.png" width="56%" ></br>
 
 # 3. Vulnerability Analysis
 由于通过目录遍历没有找到有用的信息，尝试通过DMS--opendocman进行突破：
