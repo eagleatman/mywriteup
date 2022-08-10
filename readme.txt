@@ -3,3 +3,10 @@
 1. 由于靶机都是互联网上下载的，安全性我不做任何保证，大家自己判断；
 2. 同一个靶机的笔记可能会存在IP地址不一致的问题，这是因为虚拟机都是设置的是DHCP自动获取地址，在攻击靶机的过程也不是连续的时间，因此可能存在前后IP不一致的问题，这个不是我胡乱编的IP(都是自己亲手测试)，这个不用怀疑；
 
+以后得文章基本都是按这个结构组织：
+# 1. Preface
+# 2. Information Gathering
+# 3. Vulnerability Analysis
+# 4. Exploitation
+# 5. Post-Exploitation
+# 6. Conclusion
