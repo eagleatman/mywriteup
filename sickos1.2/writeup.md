@@ -140,7 +140,7 @@ DOWNLOADED: 4612 - FOUND: 1
 
 # 📖 3. Vulnerability Analysis
 经过目录、漏洞扫描，只找到web服务的/test目录，浏览器访问一下可以看到该目录能被遍历：
-<img src="images/2.png" width="56%" />
+<img src="images/2.png" width="56%" /> <br />
 除此之外没有发现别的有用的信息😭,卡这里很久，浪费了很多时间也没有头绪。
 
 ## 3.1 web特定目录支持的http方法
