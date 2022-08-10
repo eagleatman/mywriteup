@@ -3461,3 +3461,4 @@ evil.php可以是
 我验证了一下，不支持test.method：
 <img src="https://github.com/eagleatman/mywriteup/blob/main/stapler/images/10.png" width="56%"></br>
 后来通过查看源码，的确不存在关键漏洞代码eval，也许就没有该漏洞吧 :triumph: :triumph: :triumph:
+
