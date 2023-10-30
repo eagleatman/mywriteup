@@ -58,13 +58,13 @@ Nmap done: 1 IP address (1 host up) scanned in 30.04 seconds
 ~~~
 
 2. 初步浏览了一下页面，发现如下问题：
-<img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png"  width="56%" />
-<img src="https://github.com/eagleatman/mywriteup/blob/main/images/1.png" width="56%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-11-22/images/1.png"  width="56%" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-11-22/images/1.png" width="56%" />
 
-<img src="https://github.com/eagleatman/mywriteup/blob/main/images/2.png"  width="56%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-11-22/images/2.png"  width="56%;" />
 
 去掉路径的具体文件名，只保留目录，发现存在目录遍历漏洞<br />
-<img src="https://github.com/eagleatman/mywriteup/blob/main/images/3.png"  width="56%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-11-22/images/3.png"  width="56%;" />
 
 应该是开放了两个模块，mod_perl和mod_ssl
 
@@ -579,7 +579,7 @@ passwd: all authentication tokens updated successfully
 └─# ssh root@192.168.1.104
 Unable to negotiate with 192.168.1.104 port 22: no matching key exchange method found. Their offer: diffie-hellman-group-exchange-sha1,diffie-hellman-group1-sha1
 ~~~
-<img src="https://github.com/eagleatman/mywriteup/blob/main/images/4.png"  width="56%;" />
+<img src="https://github.com/eagleatman/mywriteup/blob/main/kioptrix-11-22/images/4.png"  width="56%;" />
 **我相信还有别的思路**
 # 4. 说明
 
