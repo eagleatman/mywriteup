@@ -359,6 +359,7 @@ admin.htm
 admin.js
 index.html
 **
+
 4. 最后扫描一下web漏洞
 ~~~shell
 ┌──(root㉿kali)-[/mytest/kioptrix11-22]
@@ -400,6 +401,7 @@ index.html
 + GET /shell?cat+/etc/hosts: A backdoor was identified.
 ~~~
 比较有用的wp的漏洞，访问了一下，才发现不能访问。
+
 5. 最后看了一下网上的思路，试了一下mod_ssl：
 ~~~shell
 ┌──(root㉿kali)-[/mytest/kioptrix11-22]
